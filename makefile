@@ -1,12 +1,12 @@
 # defining C compiler, flags, directory names
 CC = gcc
 CFLAGS = -Wall -Wextra -g
-SRCDIR := src 
-OBJDIR := obj 
-INCDIR := include 
-BINDER := bin 
+SRCDIR := src
+OBJDIR := obj
+INCDIR := include
+BINDIR := bin
 TESTDIR := tests
 
 all: 
-	${CC} ${CFLAGS} main.c -o redis
+	${CC} ${CFLAGS} ${SRCDIR}/main.c -o ${BINDIR}/redis
 	
