@@ -1,3 +1,6 @@
+# defining C compiler, flags, directory names
+CC = gcc
+CFLAGS = -Wall -Wextra -g
 all: 
-	gcc -Wall -Wextra -g main.c -o redis
+	$(CC) $(CFLAGS) main.c -o redis
 	
