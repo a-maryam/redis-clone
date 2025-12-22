@@ -11,7 +11,7 @@ Example: The standard strdup() function is an example of this, where you must fr
 
 Caller allocates, function frees: Less common, but possible, a function might take a pointer as an argument, use the data, and then free it internally before returning 
 
-Caller allocates, function does not free: Most frequently, a function takes a pointer, uses the data temporarily (e.g., reads from it), and returns without modifying the memory management status [1]. The original owner (the caller) retains responsibility. 
+Caller allocates, function does not free: Most frequently, a function takes a pointer, uses the data temporarily (e.g., reads from it), and returns without modifying the memory management status. The original owner (the caller) retains responsibility. 
 
 4. Can a value change type after creation? I don't really know. It would only make sense for compatible values. I guess in that case sure, but probably not in high priority of things to implement.
 
