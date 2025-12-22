@@ -25,5 +25,5 @@ typedef struct {
         int *char_ptr;
         // create structs for other data types later
         // lists, heaps, trees...
-    } Value
-} Value
+    } data;
+} Value;
