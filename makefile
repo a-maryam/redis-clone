@@ -9,4 +9,7 @@ TESTDIR := tests
 
 all: 
 	${CC} ${CFLAGS} ${SRCDIR}/main.c -o ${BINDIR}/redis
+
+clean:
+	rm -rf ${BINDIR}/*
 	

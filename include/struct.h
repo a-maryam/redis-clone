@@ -1,21 +1,23 @@
 /* struct.h 
 Purpose: so far hold structs used at the heart of the key-value store
 */
+#ifndef STRUCT_H
+#define STRUCT_H
 
 // key will be char[] 
 
 typedef enum {
-    VALUE_FLOAT;
-    VALUE_CHAR;
-    VALUE_DOUBLE;
-    VALUE_INT;
-    VALUE_INT_PTR;
-    VALUE_CHAR_PTR;
+    VALUE_FLOAT,
+    VALUE_CHAR,
+    VALUE_DOUBLE,
+    VALUE_INT,
+    VALUE_INT_PTR,
+    VALUE_CHAR_PTR
 } ValueType;
 
 // union must hold pointers.
 typedef struct {
-    enum ValueType value;
+    ValueType value;
     union {
         float f;
         char c; 
@@ -27,3 +29,5 @@ typedef struct {
         // lists, heaps, trees...
     } data;
 } Value;
+
+#endif // STRUCT_H
