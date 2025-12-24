@@ -17,7 +17,7 @@ char* read() {
 
     printf("**Toy Redis Started**\n Enter Commands:\n");
     // will need to implement error handling for invalid inputs
-    if(fgets(line, sizeof(line), stdin) != NULL) {
+    if(fgets(line, line_length, stdin) != NULL) {
         printf("Entered: %s", line);
     } 
     else {
