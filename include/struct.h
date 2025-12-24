@@ -30,4 +30,9 @@ typedef struct {
     } data;
 } Value;
 
+typedef struct {
+    char[] key;
+    char[] value;
+} Arguments;
+
 #endif // STRUCT_H
