@@ -30,7 +30,12 @@ char* token_to_char_arr(char* ptr) {
     if(ptr == NULL) return NULL;
     // mem allocated
     int len = 50;
-    char* temp = (char*) malloc(len * sizeof(char*));
+    char* temp = (char*)malloc(len * sizeof(char*));
+    if(temp == NULL) {
+        printf("Memory allocation in token to char arr has failed.");
+        return NULL;
+    }
+
     int i = 0; 
     while(*ptr != '\0' && i < len) {
         printf("%c", *ptr);
@@ -42,76 +47,86 @@ char* token_to_char_arr(char* ptr) {
 
 }
 
+int set(struct Arguments* arg1) {
+    return 0;
+}
+
+int get(struct Arguments* arg1) {
+    return 0;
+}
+
+int del(struct Arguments* arg1) {
+    return 0;
+}
+
+int exists(struct Arguments* arg1) {
+    return 0;
+}
+
+
 int parse(char* input) {
     // strtok should go till null character in line, right?
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
     int tokens_allowed = 4;
     const char delimiters[] = " "; // might want to accommodate extra whitespace in future
-    char *token;
-    char *tokens_arr[tokens_allowed]; // gonna need checks, expect only 3 tokens atm
+    char* token;
+    char* tokens_arr = (char*)malloc(tokens_allowed*sizeof(*tokens_arr));
+    char* beg_arr = tokens_arr;
+    // gonna need checks, expect only 3 tokens atm
     
     token = strtok(input, delimiters);
     int i = 0;
     
     while(token!=NULL && i < tokens_allowed) {
-        tokens_arr[i++] = token; // store ptr
+        i++;
+        *tokens_arr = *token; // store ptr
+        tokens_arr++;
         token = strtok(NULL, delimiters); // get next token
     }
-    free(delimiters);
+    //free(delimiters);
 
     printf("Tokens\n");
 
-    for(int j = 0; j < i; j++) {
+    /*for(int j = 0; j < i; j++) {
         printf("Token %d: %s\n", j+1, tokens_arr[j]);
-    }
+    }*///gotta rewrite
 
     if(i <= 1) {
         printf("Commands invalid");
-        return null;
+        return -1;
     }
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
-    char key[] = token_to_char_arr(tokens_arr[1]);
-    char value[] = (i > 2 ? token_to_char_arr(tokens_arr[2]) : null)
+    char* key1 = token_to_char_arr(beg_arr);
+    char* value1 = (i > 2 ? token_to_char_arr(beg_arr+1) : NULL);
 
+    
+    struct Arguments *arg1 = (struct Arguments*)malloc(sizeof(struct Arguments));
+    if(arg1 != NULL) { // not sure when to free this mem...
+        arg1 -> key = key1;
+        arg1 -> value = value1;
+    }
 
-    Arguments arg1 = {key, value};
-
-    if(strcmp(tokens_arr[0], "GET")==0) { 
+    if(strcmp(key1, "GET")==0) { 
         get(arg1);
     }
-    else if(strcmp(tokens_arr[0], "SET")==0) {
+    else if(strcmp(key1, "SET")==0) {
         set(arg1);
     }
-    else if(strcmp(tokens_arr[0], "DEL")==0) {
+    else if(strcmp(key1, "DEL")==0) {
         del(arg1);
     }
-    else if(strcmp(tokens_arr[0], "EXISTS")==0) {
+    else if(strcmp(key1, "EXISTS")==0) {
         exists(arg1);
     }
 
     free(tokens_arr);
-    free(token);
+    //free(token);
 
     return 0; // need my hash table...before i can write the functions
 }
 
-int set(Arguments arg1) {
-    return 0;
-}
-
-get(Arguments arg1) {
-    return 0;
-}
-
-del(Arguments arg1) {
-    return 0;
-}
-
-exists(Arguments arg1) {
-    return 0;
-}
 
 int main(void) {
     parse(read());

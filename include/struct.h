@@ -30,11 +30,10 @@ typedef struct {
     } data;
 } Value;
 
-typedef struct {
-    char key[50];
-    char value[50];
-} Arguments;
-// sizing for the key/value -- oops these might need to be ptrs...
-//gonna have to think about that, not extensible this way i think
+// dunno typedef didn't seem to be working. circble back
+struct Arguments {
+    char *key;
+    char *value;
+};
 
 #endif // STRUCT_H
