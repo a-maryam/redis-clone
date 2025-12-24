@@ -120,8 +120,8 @@ int parse(char* input) {
     else if(strcmp(key1, "EXISTS")==0) {
         exists(arg1);
     }
-
-    free(tokens_arr);
+    free(beg_arr);
+    //free(tokens_arr);
     //free(token);
 
     return 0; // need my hash table...before i can write the functions
