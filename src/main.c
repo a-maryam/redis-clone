@@ -50,6 +50,7 @@ int parse(char[] input) {
         tokens_arr[i++] = token; // store ptr
         token = strtok(NULL, delimiters); // get next token
     }
+    free(delimiters);
 
     printf("Tokens\n");
 
@@ -63,11 +64,10 @@ int parse(char[] input) {
     }
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
-    char[] key = token_to_char_arr(tokens_arr[1]);
-    char[] value = (i > 2 ? token_to_char_arr(tokens_arr[2]) : null)
+    char key[] = token_to_char_arr(tokens_arr[1]);
+    char value[] = (i > 2 ? token_to_char_arr(tokens_arr[2]) : null)
 
-
-    Arguments arg1 = {tokens_arr[1], (i > 2 ? tokens_arr[2] : null)};
+    Arguments arg1 = {key, value};
 
     if(strcmp(tokens_arr[0], "GET")==0) { 
         get(arg1);
@@ -82,23 +82,26 @@ int parse(char[] input) {
         exists(arg1);
     }
 
+    free(tokens_arr);
+    free(token);
+
     return 0; // need my hash table...before i can write the functions
 }
 
-set(Arguments arg1) {
-
+int set(Arguments arg1) {
+    return 0;
 }
 
 get(Arguments arg1) {
-
+    return 0;
 }
 
 del(Arguments arg1) {
-
+    return 0;
 }
 
 exists(Arguments arg1) {
-
+    return 0;
 }
 
 int main(void) {

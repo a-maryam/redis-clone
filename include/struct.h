@@ -31,8 +31,8 @@ typedef struct {
 } Value;
 
 typedef struct {
-    char[] key;
-    char[] value;
+    char key[50];
+    char value[50];
 } Arguments;
 
 #endif // STRUCT_H
