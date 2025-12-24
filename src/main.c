@@ -7,8 +7,14 @@ currently contains parser, main, read, token to char func
 #include "../include/struct.h"
 // probably have to change from relative to whatever best practice is
 
-int* read() {
-    char line[100];
+char* read() {
+    int line_length = 100;
+    char* line = (char*)malloc(line_length * sizeof(*line));
+    if(line == NULL) {
+        printf("Memory allocation for line failed\n");
+        return NULL;
+    }
+
     printf("**Toy Redis Started**\n Enter Commands:\n");
     // will need to implement error handling for invalid inputs
     if(fgets(line, sizeof(line), stdin) != NULL) {
@@ -21,20 +27,22 @@ int* read() {
 } // need to free...parse will free
 
 char* token_to_char_arr(char* ptr) {
-    if(ptr == null) return null;
+    if(ptr == NULL) return NULL;
     // mem allocated
-    char[] temp = new char[50];
+    int len = 50;
+    char* temp = (char*) malloc(len * sizeof(char*));
     int i = 0; 
-    while(*ptr != '\0' && i < 50) {
+    while(*ptr != '\0' && i < len) {
         printf("%c", *ptr);
-        temp[i++] = *ptr;
+        *temp = *ptr;
+        temp++;
         ptr++;
     }
-    return temp;
+    return temp; // must free as well 
 
 }
 
-int parse(char[] input) {
+int parse(char* input) {
     // strtok should go till null character in line, right?
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
@@ -66,6 +74,7 @@ int parse(char[] input) {
     // can just copy to new vars and pass. easier
     char key[] = token_to_char_arr(tokens_arr[1]);
     char value[] = (i > 2 ? token_to_char_arr(tokens_arr[2]) : null)
+
 
     Arguments arg1 = {key, value};
 
