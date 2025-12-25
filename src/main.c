@@ -50,21 +50,35 @@ char* token_to_char_arr(char* ptr) {
 
 }
 
+int free_arg_struct(struct Arguments* arg1) {
+    free(arg1->key);
+    free(arg1->value);
+    free(arg1);
+    return 0;
+}
+
 int set(struct Arguments* arg1) {
+
+    free_arg_struct(arg1);
     return 0;
 }
 
 int get(struct Arguments* arg1) {
+    free_arg_struct(arg1);
     return 0;
 }
 
 int del(struct Arguments* arg1) {
+    free_arg_struct(arg1);
     return 0;
 }
 
 int exists(struct Arguments* arg1) {
+    free_arg_struct(arg1);
     return 0;
 }
+
+
 
 
 int parse(char* input) {
@@ -92,7 +106,7 @@ int parse(char* input) {
         //tokens_arr++;
         token = strtok(NULL, delimiters); // get next token
     }
-    //free(delimiters);
+    
 
     printf("Tokens\n");
 
@@ -116,21 +130,21 @@ int parse(char* input) {
         arg1 -> value = value1;
     }
 
-    if(strcmp(key1, "GET")==0) { 
+
+    if(strcmp(beg_arr[0], "GET")==0) { 
         get(arg1);
     }
-    else if(strcmp(key1, "SET")==0) {
+    else if(strcmp(beg_arr[0], "SET")==0) {
         set(arg1);
     }
-    else if(strcmp(key1, "DEL")==0) {
+    else if(strcmp(beg_arr[0], "DEL")==0) {
         del(arg1);
     }
-    else if(strcmp(key1, "EXISTS")==0) {
+    else if(strcmp(beg_arr[0], "EXISTS")==0) {
         exists(arg1);
     }
-    free(beg_arr);
-    //free(tokens_arr);
-    //free(token);
+    free(tokens_arr);
+    free(input);
 
     return 0; // need my hash table...before i can write the functions
 }
