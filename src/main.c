@@ -29,8 +29,12 @@ char* read() {
 char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller frees
     if(ptr == NULL) return NULL;
     // mem allocated
-    int len = 50;
+    int len = 50; // totally open to change this later. 
     char* temp = (char*)malloc(len * sizeof(*temp));
+    if(temp == NULL) {
+        printf("Memory allocation for line failed\n");
+        return NULL;
+    }
     char* beg = temp;
     if(temp == NULL) {
         printf("Memory allocation in token to char arr has failed.");
@@ -38,13 +42,13 @@ char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller free
     }
 
     int i = 0; 
-    while(*ptr != '\0' && i < len) {
-        i++;
+    while(*ptr != '\0' && i < len - 1) {
         printf("%c", *ptr);
-        *temp = *ptr;
-        temp++;
-        ptr++;
+        *temp++ = *ptr++;
+        i++;
     }
+    *temp = '\0';
+
     printf("\nend of one char arr making run.\n");
     return beg; // must free as well 
 
@@ -86,6 +90,10 @@ int parse(char* input) {
     char* token;
     // array of token strings
     char** tokens_arr = (char**)malloc(tokens_allowed*sizeof(*tokens_arr));
+    if(tokens_arr == NULL) {
+        printf("Memory allocation for line failed\n");
+        return -1;
+    }
     char** beg_arr = tokens_arr;
     // gonna need checks, expect only 3 tokens atm
     int max_length_token = 10;
@@ -118,11 +126,14 @@ int parse(char* input) {
     
     struct Arguments *arg1 = (struct Arguments*)malloc(sizeof(struct Arguments));
     
-    if(arg1 != NULL) { 
+    if(arg1 == NULL) {
+        printf("Memory allocation for line failed\n");
+        return -1;
+    }
+    else { 
         arg1 -> key = key1;
         arg1 -> value = value1;
     }
-
 
     if(strcmp(beg_arr[0], "GET")==0) { 
         get(arg1);
@@ -137,11 +148,11 @@ int parse(char* input) {
         exists(arg1);
     }
     free(tokens_arr); // function allocated and function freed
-    free(input); // read allocated, caller freed (factory pattern)
-
+     
     // frees token_to_char_arr allocated mem
     free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
-
+    free(input); // read allocated, caller freed (factory pattern)
+    // tokens from input were put into new buffers anyhow.
     return 0; // need my hash table...before i can write the functions
 }
 
