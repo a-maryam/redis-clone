@@ -23,7 +23,7 @@ char* read() {
     else {
         printf("Error reading input.");
     }
-    return line;
+    return line; // seems correct
 } // need to free...parse will free
 
 char* token_to_char_arr(char* ptr) {
@@ -31,6 +31,7 @@ char* token_to_char_arr(char* ptr) {
     // mem allocated
     int len = 50;
     char* temp = (char*)malloc(len * sizeof(char*));
+    char* beg = temp;
     if(temp == NULL) {
         printf("Memory allocation in token to char arr has failed.");
         return NULL;
@@ -38,12 +39,14 @@ char* token_to_char_arr(char* ptr) {
 
     int i = 0; 
     while(*ptr != '\0' && i < len) {
+        i++;
         printf("%c", *ptr);
         *temp = *ptr;
         temp++;
         ptr++;
     }
-    return temp; // must free as well 
+    printf("\nend of one char arr making run.\n");
+    return beg; // must free as well 
 
 }
 
@@ -71,17 +74,22 @@ int parse(char* input) {
     int tokens_allowed = 4;
     const char delimiters[] = " "; // might want to accommodate extra whitespace in future
     char* token;
-    char* tokens_arr = (char*)malloc(tokens_allowed*sizeof(*tokens_arr));
-    char* beg_arr = tokens_arr;
+    // array of tokens
+    char** tokens_arr = (char**)malloc(tokens_allowed*sizeof(*tokens_arr));
+    char** beg_arr = tokens_arr;
     // gonna need checks, expect only 3 tokens atm
+    int max_length_token = 10;
     
     token = strtok(input, delimiters);
     int i = 0;
     
     while(token!=NULL && i < tokens_allowed) {
+        //tokens_arr[i] = (char *)malloc(max_length * sizeof(char));
+        tokens_arr[i] = token;
+        // add error check
         i++;
-        *tokens_arr = *token; // store ptr
-        tokens_arr++;
+        //*tokens_arr = *token; // store ptr
+        //tokens_arr++;
         token = strtok(NULL, delimiters); // get next token
     }
     //free(delimiters);
@@ -98,8 +106,8 @@ int parse(char* input) {
     }
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
-    char* key1 = token_to_char_arr(beg_arr);
-    char* value1 = (i > 2 ? token_to_char_arr(beg_arr+1) : NULL);
+    char* key1 = token_to_char_arr(beg_arr[1]);
+    char* value1 = (i > 2 ? token_to_char_arr(beg_arr[2]) : NULL);
 
     
     struct Arguments *arg1 = (struct Arguments*)malloc(sizeof(struct Arguments));
