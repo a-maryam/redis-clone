@@ -16,7 +16,7 @@ static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: call
     if(ptr == NULL) return NULL;
     // mem allocated
     int len = 50; // totally open to change this later. 
-    char* temp = (char*)malloc(len * sizeof(*temp));
+    char* temp = malloc(len * sizeof(*temp));
     if(temp == NULL) {
         printf("Memory allocation for line failed\n");
         return NULL;
@@ -75,7 +75,7 @@ int parse(char* input) {
     const char delimiters[] = " "; // might want to accommodate extra whitespace in future
     char* token;
     // array of token strings
-    char** tokens_arr = (char**)malloc(tokens_allowed*sizeof(*tokens_arr));
+    char** tokens_arr = malloc(tokens_allowed*sizeof(*tokens_arr));
 
     if(tokens_arr == NULL) {
         printf("Memory allocation for line failed\n");
@@ -111,7 +111,7 @@ int parse(char* input) {
     char* value1 = (i > 2 ? token_to_char_arr(beg_arr[2]) : NULL);
 
     
-    struct Arguments *arg1 = (struct Arguments*)malloc(sizeof(struct Arguments));
+    struct Arguments *arg1 = malloc(sizeof(struct Arguments));
     
     if(arg1 == NULL) {
         printf("Memory allocation for line failed\n");
