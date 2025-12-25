@@ -5,28 +5,14 @@ currently contains parser, main, read, token to char func
 #include <string.h>
 #include <stdlib.h>
 #include "../include/struct.h"
+#include "../include/parser.h"
+#include "../include/commands.h"
+#include "../include/input.h"
 // probably have to change from relative to whatever best practice is
 
-char* read() {
-    int line_length = 100;
-    char* line = (char*)malloc(line_length * sizeof(*line));
-    if(line == NULL) {
-        printf("Memory allocation for line failed\n");
-        return NULL;
-    }
+// file organization: helper functions, and then in order of useage. 
 
-    printf("**Toy Redis Started**\n Enter Commands:\n");
-    // will need to implement error handling for invalid inputs
-    if(fgets(line, line_length, stdin) != NULL) {
-        printf("Entered: %s", line);
-    } 
-    else {
-        printf("Error reading input.");
-    }
-    return line; // seems correct
-} 
-
-char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller frees
+static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller frees
     if(ptr == NULL) return NULL;
     // mem allocated
     int len = 50; // totally open to change this later. 
@@ -54,33 +40,33 @@ char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller free
 
 }
 
-int free_arg_struct(struct Arguments* arg1) {
+// frees members and struct
+static int free_arg_struct(struct Arguments* arg1) {
     free(arg1->key);
     free(arg1->value);
     free(arg1);
     return 0;
 }
 
-int set(struct Arguments* arg1) {
+char* read() {
+    int line_length = 100;
+    char* line = (char*)malloc(line_length * sizeof(*line));
 
-    return 0;
-}
+    if(line == NULL) {
+        printf("Memory allocation for line failed\n");
+        return NULL;
+    }
 
-int get(struct Arguments* arg1) {
-    
-    return 0;
-}
-
-int del(struct Arguments* arg1) {
-   
-    return 0;
-}
-
-int exists(struct Arguments* arg1) {
-    
-    return 0;
-}
-
+    printf("**Toy Redis Started**\n Enter Commands:\n");
+    // will need to implement error handling for invalid inputs
+    if(fgets(line, line_length, stdin) != NULL) {
+        printf("Entered: %s", line);
+    } 
+    else {
+        printf("Error reading input.");
+    }
+    return line; // seems correct
+} 
 
 int parse(char* input) {
     // forget what ur supposed to do when you have a variable number 
@@ -90,10 +76,12 @@ int parse(char* input) {
     char* token;
     // array of token strings
     char** tokens_arr = (char**)malloc(tokens_allowed*sizeof(*tokens_arr));
+
     if(tokens_arr == NULL) {
         printf("Memory allocation for line failed\n");
         return -1;
     }
+
     char** beg_arr = tokens_arr;
     // gonna need checks, expect only 3 tokens atm
     int max_length_token = 10;
@@ -107,7 +95,6 @@ int parse(char* input) {
         token = strtok(NULL, delimiters); // get next token
     }
     
-
     printf("Tokens\n");
 
     /*for(int j = 0; j < i; j++) {
@@ -156,6 +143,25 @@ int parse(char* input) {
     return 0; // need my hash table...before i can write the functions
 }
 
+int set(struct Arguments* arg1) {
+
+    return 0;
+}
+
+int get(struct Arguments* arg1) {
+    
+    return 0;
+}
+
+int del(struct Arguments* arg1) {
+   
+    return 0;
+}
+
+int exists(struct Arguments* arg1) {
+    
+    return 0;
+}
 
 int main(void) {
     parse(read());
