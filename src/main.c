@@ -24,13 +24,13 @@ char* read() {
         printf("Error reading input.");
     }
     return line; // seems correct
-} // need to free...parse will free
+} 
 
-char* token_to_char_arr(char* ptr) {
+char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller frees
     if(ptr == NULL) return NULL;
     // mem allocated
     int len = 50;
-    char* temp = (char*)malloc(len * sizeof(char*));
+    char* temp = (char*)malloc(len * sizeof(*temp));
     char* beg = temp;
     if(temp == NULL) {
         printf("Memory allocation in token to char arr has failed.");
@@ -59,36 +59,32 @@ int free_arg_struct(struct Arguments* arg1) {
 
 int set(struct Arguments* arg1) {
 
-    free_arg_struct(arg1);
     return 0;
 }
 
 int get(struct Arguments* arg1) {
-    free_arg_struct(arg1);
+    
     return 0;
 }
 
 int del(struct Arguments* arg1) {
-    free_arg_struct(arg1);
+   
     return 0;
 }
 
 int exists(struct Arguments* arg1) {
-    free_arg_struct(arg1);
+    
     return 0;
 }
 
 
-
-
 int parse(char* input) {
-    // strtok should go till null character in line, right?
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
     int tokens_allowed = 4;
     const char delimiters[] = " "; // might want to accommodate extra whitespace in future
     char* token;
-    // array of tokens
+    // array of token strings
     char** tokens_arr = (char**)malloc(tokens_allowed*sizeof(*tokens_arr));
     char** beg_arr = tokens_arr;
     // gonna need checks, expect only 3 tokens atm
@@ -98,12 +94,8 @@ int parse(char* input) {
     int i = 0;
     
     while(token!=NULL && i < tokens_allowed) {
-        //tokens_arr[i] = (char *)malloc(max_length * sizeof(char));
         tokens_arr[i] = token;
-        // add error check
         i++;
-        //*tokens_arr = *token; // store ptr
-        //tokens_arr++;
         token = strtok(NULL, delimiters); // get next token
     }
     
@@ -125,7 +117,8 @@ int parse(char* input) {
 
     
     struct Arguments *arg1 = (struct Arguments*)malloc(sizeof(struct Arguments));
-    if(arg1 != NULL) { // not sure when to free this mem...
+    
+    if(arg1 != NULL) { 
         arg1 -> key = key1;
         arg1 -> value = value1;
     }
@@ -143,8 +136,11 @@ int parse(char* input) {
     else if(strcmp(beg_arr[0], "EXISTS")==0) {
         exists(arg1);
     }
-    free(tokens_arr);
-    free(input);
+    free(tokens_arr); // function allocated and function freed
+    free(input); // read allocated, caller freed (factory pattern)
+
+    // frees token_to_char_arr allocated mem
+    free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
 
     return 0; // need my hash table...before i can write the functions
 }
