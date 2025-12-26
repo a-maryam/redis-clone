@@ -83,8 +83,6 @@ int parse(char* input) {
     }
 
     char** beg_arr = tokens_arr;
-    // gonna need checks, expect only 3 tokens atm
-    int max_length_token = 10;
     
     token = strtok(input, delimiters);
     int i = 0;

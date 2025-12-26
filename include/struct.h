@@ -16,7 +16,7 @@ typedef enum {
 } ValueType;
 
 // union must hold pointers.
-typedef struct {
+struct Value {
     ValueType value;
     union {
         float f;
@@ -28,7 +28,7 @@ typedef struct {
         // create structs for other data types later
         // lists, heaps, trees...
     } data;
-} Value;
+};
 
 // dunno typedef didn't seem to be working. circble back
 struct Arguments {
