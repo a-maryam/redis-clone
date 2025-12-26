@@ -13,7 +13,7 @@ typedef struct node {
 
 typedef struct hash_table {
     int size;
-    struct node *nodes;
+    struct node **buckets;
 } hash_table;
 
 int create_table();
