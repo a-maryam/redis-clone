@@ -18,15 +18,12 @@ static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: call
     int len = 50; // totally open to change this later. 
     char* temp = malloc(len * sizeof(*temp));
     if(temp == NULL) {
-        printf("Memory allocation for line failed\n");
-        return NULL;
-    }
-    char* beg = temp;
-    if(temp == NULL) {
         printf("Memory allocation in token to char arr has failed.");
         return NULL;
     }
 
+    char* beg = temp;
+    
     int i = 0; 
     while(*ptr != '\0' && i < len - 1) {
         printf("%c", *ptr);
@@ -37,7 +34,6 @@ static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: call
 
     printf("\nend of one char arr making run.\n");
     return beg; // must free as well 
-
 }
 
 // frees members and struct
@@ -92,22 +88,16 @@ int parse(char* input) {
         i++;
         token = strtok(NULL, delimiters); // get next token
     }
-    
-    printf("Tokens\n");
-
-    /*for(int j = 0; j < i; j++) {
-        printf("Token %d: %s\n", j+1, tokens_arr[j]);
-    }*///gotta rewrite
 
     if(i <= 1) {
         printf("Commands invalid");
         return -1;
     }
+    
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
     char* key1 = token_to_char_arr(beg_arr[1]);
     char* value1 = (i > 2 ? token_to_char_arr(beg_arr[2]) : NULL);
-
     
     struct Arguments *arg1 = malloc(sizeof(struct Arguments));
     
