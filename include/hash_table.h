@@ -16,11 +16,11 @@ typedef struct node {
 } node;
 
 typedef struct hash_table {
-    int size;
+    int cap; // capacity
     struct node** buckets;
 } hash_table;
 
-int create_table();
+struct hash_table* create_table(struct Arguments arg1);
 
 // buckets
 // linkedlist

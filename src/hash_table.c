@@ -2,6 +2,7 @@
 #include "../include/hash_table.h"
 #include "../include/struct.h"
 #include <stdint.h>
+#include <stdlib.h>
 
 // djb2 non-cryptographic hash
 static uint64_t hash(const unsigned char* str) { // high bit set characters can become negative. 
@@ -14,24 +15,16 @@ static uint64_t hash(const unsigned char* str) { // high bit set characters can 
     return hash; 
 }
 
-static int index(const uint64_t hash, int size) {
+static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-int create_table(struct Arguments arg1) { // should createtable take the first value to add or simply allocate? 
+struct hash_table* create_table(struct Arguments arg1) { // should createtable take the first value to add or simply allocate? 
     const int default_size = 16;
-    struct hash_table* kv_store = malloc(sizeof(*hash_table));
-    kv_store -> size = default_size;
-    kv_store -> buckets = malloc(sizeof(struct *node));
-    struct node* 
-    for(int i = 0; i < default_size; i++) {
-        kv_store = malloc(line_length * sizeof(*line));
-
-    if(line == NULL) {
-        printf("Memory allocation for line failed\n");
-        return NULL;
-    }
-    }
+    struct hash_table* kv_store = malloc(sizeof(struct hash_table));
+    kv_store->cap = default_size;
+    kv_store->buckets = calloc(kv_store->cap, sizeof(struct node));
+    return kv_store;
 }
 // when should the table be created? 
 
