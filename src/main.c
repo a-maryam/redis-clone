@@ -47,7 +47,7 @@ static int free_arg_struct(struct Arguments* arg1) {
 
 char* read() {
     int line_length = 100;
-    char* line = (char*)malloc(line_length * sizeof(*line));
+    char* line = malloc(line_length * sizeof(*line));
 
     if(line == NULL) {
         printf("Memory allocation for line failed\n");
@@ -131,6 +131,8 @@ int parse(char* input) {
     // tokens from input were put into new buffers anyhow.
     return 0; // need my hash table...before i can write the functions
 }
+
+/* COMMANDS */
 
 int set(struct Arguments* arg1) {
 
