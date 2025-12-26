@@ -8,6 +8,7 @@ currently contains parser, main, read, token to char func
 #include "../include/parser.h"
 #include "../include/commands.h"
 #include "../include/input.h"
+#include "../include/hash_table.h"
 // probably have to change from relative to whatever best practice is
 
 // file organization: helper functions, and then in order of useage. 
@@ -93,7 +94,7 @@ int parse(char* input) {
         printf("Commands invalid");
         return -1;
     }
-    
+
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
     char* key1 = token_to_char_arr(beg_arr[1]);
