@@ -13,6 +13,6 @@ all:
 clean:
 	rm -rf ${BINDIR}/*
 
-tests:
-	${CC} ${CFLAGS} ${SRCDIR}/tests.c ${SRCDIR}/hash_table.c ${SRCDIR}/read.c ${SRCDIR}/parser.c ${SRCDIR}/commands.c ${SRCDIR}/struct.c  -o ${BINDIR}/tests
+test:
+	${CC} ${CFLAGS} ${TESTDIR}/tests.c ${SRCDIR}/hash_table.c ${SRCDIR}/read.c ${SRCDIR}/parser.c ${SRCDIR}/commands.c ${SRCDIR}/struct.c  -o ${BINDIR}/tests
 	

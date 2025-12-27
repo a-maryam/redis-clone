@@ -3,7 +3,7 @@ Redis-like in-memory key value store using C.
 It is a learning project that is not feature-complete.
 I did not follow a tutorial; my toy redis is built from a simplified, conceptual understanding of what redis does. 
 
-## Implemented Features:
+## Implemented Features
 - In-memory key-value store: 
     - hash table implemented using chaining (simple hash function)
     - dynamically allocated
@@ -14,7 +14,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Tests started
     - tests for validating core data structures started
 
-## Design: 
+## Design 
 - Using C because that's what Redis is written in, and to recall lower level topics such as memory management. 
 - Chaining for hashtable collisions: simple for now
 
