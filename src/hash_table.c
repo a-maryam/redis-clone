@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 // djb2 non-cryptographic hash
 static uint64_t hash_function(const unsigned char* str) { // high bit set characters can become negative. 
@@ -40,7 +41,7 @@ struct hash_table* create_table() { // should createtable take the first value t
     return kv_store;
 }
 
-struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
+struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(struct node));
     if(new_node == NULL) {
@@ -68,6 +69,11 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     }
 
     return kv_store; 
+}
+
+struct hash_table* get_value(struct hash_table*, char* key) {
+
+
 }
 
 /*int remove(struct hash_table* kv_store, char* key) {

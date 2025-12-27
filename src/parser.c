@@ -35,7 +35,7 @@ static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: call
     return beg; // must free as well 
 }
 
-int parse(char* input) {
+struct Arguments* parse(char* input) {
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
     int tokens_allowed = 4;
@@ -67,6 +67,7 @@ int parse(char* input) {
 
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
+    enum Command command1 = parse_command(beg_arr[0]);
     char* key1 = token_to_char_arr(beg_arr[1]);
     char* value1 = (i > 2 ? token_to_char_arr(beg_arr[2]) : NULL);
     
@@ -77,31 +78,18 @@ int parse(char* input) {
         return -1;
     }
     else { 
+        arg1 -> command = command1;
         arg1 -> key = key1;
         arg1 -> value = value1;
     }
 
-    /*struct hash_table* kv_store = create_table();
-
-    if(strcmp(beg_arr[0], "GET")==0) { 
-        get(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "SET")==0) {
-        set(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "DEL")==0) {
-        del(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "EXISTS")==0) {
-        exists(kv_store, arg1);
-    }*/
     free(tokens_arr); // function allocated and function freed
      
     // frees token_to_char_arr allocated mem
-    free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
+    //free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
     free(input); // read allocated, caller freed (factory pattern)
-    // tokens from input were put into new buffers anyhow.
-    return 0; 
+     // tokens from input were put into new buffers 
+    return arg1; // caller must free now.
 }
 
 
