@@ -11,3 +11,9 @@ int test_kv_insert(struct Arguments* arg1) {
     return 0;
 }
 
+void main() {
+    struct Arguments* arg = malloc(sizeof(struct Arguments));
+
+    //arg->key 
+}
+
