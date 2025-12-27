@@ -19,8 +19,8 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Chaining for hashtable collisions: simple for now
 
 ## Usage
-`SET key value`
-`GET key`
+`SET key value`<br>
+`GET key`<br>
 `> value`
 
 ## Planned 
