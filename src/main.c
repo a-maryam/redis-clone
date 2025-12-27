@@ -9,6 +9,7 @@ currently contains parser, main, read, token to char func
 #include "../include/commands.h"
 #include "../include/input.h"
 #include "../include/hash_table.h"
+#include "../include/tests.h"
 // probably have to change from relative to whatever best practice is
 
 // file organization: helper functions, and then in order of useage. 
@@ -111,7 +112,9 @@ int parse(char* input) {
         arg1 -> value = value1;
     }
 
-    struct hash_table* kv_store = create_table();
+    test_kv_insert(arg1);
+
+    /*struct hash_table* kv_store = create_table();
 
     if(strcmp(beg_arr[0], "GET")==0) { 
         get(kv_store, arg1);
@@ -124,7 +127,7 @@ int parse(char* input) {
     }
     else if(strcmp(beg_arr[0], "EXISTS")==0) {
         exists(kv_store, arg1);
-    }
+    }*/
     free(tokens_arr); // function allocated and function freed
      
     // frees token_to_char_arr allocated mem
@@ -134,10 +137,16 @@ int parse(char* input) {
     return 0; // need my hash table...before i can write the functions
 }
 
+int test_kv_insert(struct Arguments* arg1) {
+    struct hash_table* kv_store = create_table();
+    set(kv_store, arg1);
+    return 0;
+}
+
 /* COMMANDS */
 // kv assumed initialized. should be in command loop. 
 int set(struct hash_table* kv, struct Arguments* arg1) {
-    
+    insert(kv, arg1);
     return 0;
 }
 

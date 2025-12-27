@@ -20,6 +20,7 @@ typedef struct hash_table {
 } hash_table;
 
 struct hash_table* create_table();
+int insert(struct hash_table* kv_store, struct Arguments* arg1);
 
 // buckets
 // linkedlist
