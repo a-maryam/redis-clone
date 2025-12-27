@@ -36,4 +36,6 @@ struct Arguments {
     char *value;
 };
 
+int free_arg_struct(struct Arguments* arg1);
+
 #endif // STRUCT_H

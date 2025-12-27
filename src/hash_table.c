@@ -24,7 +24,7 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
 /* Functions for testing purposes */
 static void print_node(node * n) {
     printf("------------------\n");
-    printf("Printing a node");
+    printf("Printing a node\n");
     printf("Key: %s\n", n->key);
     printf("Node: %s\n", n->value);
     printf("------------------\n");

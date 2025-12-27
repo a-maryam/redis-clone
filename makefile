@@ -8,8 +8,11 @@ BINDIR := bin
 TESTDIR := tests
 
 all: 
-	${CC} ${CFLAGS} ${SRCDIR}/main.c ${SRCDIR}/hash_table.c -o ${BINDIR}/redis
+	${CC} ${CFLAGS} ${SRCDIR}/driver.c ${SRCDIR}/hash_table.c ${SRCDIR}/read.c ${SRCDIR}/parser.c ${SRCDIR}/commands.c ${SRCDIR}/struct.c -o ${BINDIR}/redis
 
 clean:
 	rm -rf ${BINDIR}/*
+
+tests:
+	${CC} ${CFLAGS} ${SRCDIR}/tests.c ${SRCDIR}/hash_table.c ${SRCDIR}/read.c ${SRCDIR}/parser.c ${SRCDIR}/commands.c ${SRCDIR}/struct.c  -o ${BINDIR}/tests
 	
