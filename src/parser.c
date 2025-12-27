@@ -101,7 +101,7 @@ int parse(char* input) {
     free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
     free(input); // read allocated, caller freed (factory pattern)
     // tokens from input were put into new buffers anyhow.
-    return 0; // need my hash table...before i can write the functions
+    return 0; 
 }
 
 

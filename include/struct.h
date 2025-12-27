@@ -4,8 +4,6 @@ Purpose: so far hold structs used at the heart of the key-value store
 #ifndef STRUCT_H
 #define STRUCT_H
 
-// key will be char[] 
-
 typedef enum {
     VALUE_FLOAT,
     VALUE_CHAR,
@@ -23,14 +21,13 @@ struct Value {
         char c; 
         double d;
         int i;
-        int *arr_ptr; // will be dynamically allocated and live on heap
+        int *arr_ptr; 
         int *char_ptr;
         // create structs for other data types later
         // lists, heaps, trees...
     } data;
 };
 
-// dunno typedef didn't seem to be working. circble back
 struct Arguments {
     char *key; 
     char *value;
