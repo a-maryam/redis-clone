@@ -3,9 +3,11 @@
 #include "../include/struct.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 // djb2 non-cryptographic hash
-static uint64_t hash(const unsigned char* str) { // high bit set characters can become negative. 
+static uint64_t hash_function(const unsigned char* str) { // high bit set characters can become negative. 
     uint64_t hash = 5381; 
 
     while(*str) {
@@ -19,14 +21,50 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-struct hash_table* create_table(struct Arguments arg1) { // should createtable take the first value to add or simply allocate? 
+struct hash_table* create_table() { // should createtable take the first value to add or simply allocate? 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(struct hash_table));
+    if(kv_store == NULL) {
+        printf("Memory allocation for kv_store in create_table failed");
+        return NULL;
+    }
+
     kv_store->cap = default_size;
     kv_store->buckets = calloc(kv_store->cap, sizeof(struct node));
+
+    if(kv_store->buckets == NULL) {
+        printf("Memory allocation for buckets in create_table failed");
+        return NULL;
+    }
+
     return kv_store;
 }
-// when should the table be created? 
+
+int insert(struct hash_table* kv_store, struct Arguments* arg1) {
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
+    struct node* new_node = malloc(sizeof(struct node));
+    new_node->key = strdup(arg1->key);
+    new_node->value = strdup(arg1->value); // write copy_value when i go to Value struct
+    new_node->next = NULL;
+
+    if(kv_store->buckets[hash] == NULL) {
+        kv_store->buckets[hash] = new_node;
+    }
+    else { // case of hash collision -> maybe this code should be moved
+        struct node* temp = kv_store->buckets[hash];
+        struct node* tail;
+        while(temp!=NULL) {
+            tail = temp;
+            temp = temp->next;
+        }
+        tail->next = new_node;
+    }
+
+    return 0; 
+}
+
+
+// when should the table be created? created in main(), needs to be held onto.
 
 // who is going to create tables and who will free? 
 // allocated here and caller should free I guess, function for freeing should be in this file

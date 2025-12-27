@@ -32,7 +32,7 @@ struct Value {
 
 // dunno typedef didn't seem to be working. circble back
 struct Arguments {
-    char *key;
+    char *key; 
     char *value;
 };
 

@@ -111,17 +111,19 @@ int parse(char* input) {
         arg1 -> value = value1;
     }
 
+    struct hash_table* kv_store = create_table();
+
     if(strcmp(beg_arr[0], "GET")==0) { 
-        get(arg1);
+        get(kv_store, arg1);
     }
     else if(strcmp(beg_arr[0], "SET")==0) {
-        set(arg1);
+        set(kv_store, arg1);
     }
     else if(strcmp(beg_arr[0], "DEL")==0) {
-        del(arg1);
+        del(kv_store, arg1);
     }
     else if(strcmp(beg_arr[0], "EXISTS")==0) {
-        exists(arg1);
+        exists(kv_store, arg1);
     }
     free(tokens_arr); // function allocated and function freed
      
@@ -133,23 +135,23 @@ int parse(char* input) {
 }
 
 /* COMMANDS */
-
-int set(struct Arguments* arg1) {
-
-    return 0;
-}
-
-int get(struct Arguments* arg1) {
+// kv assumed initialized. should be in command loop. 
+int set(struct hash_table* kv, struct Arguments* arg1) {
     
     return 0;
 }
 
-int del(struct Arguments* arg1) {
+int get(struct hash_table* kv, struct Arguments* arg1) {
+    
+    return 0;
+}
+
+int del(struct hash_table* kv, struct Arguments* arg1) {
    
     return 0;
 }
 
-int exists(struct Arguments* arg1) {
+int exists(struct hash_table* kv, struct Arguments* arg1) {
     
     return 0;
 }

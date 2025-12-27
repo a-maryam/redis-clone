@@ -5,13 +5,12 @@
 #include "struct.h"
 
 // hashtable stores strings until further notice
-// hashtable = array of bucket heads, bucket is chain of node
-
+// hashtable = array of bucket heads, bucket is chain of nodes
 
 // don't think typedefs are working for some reason. 
 typedef struct node {
     char* key;
-    struct Value value;
+    char* value; // change to Value struct
     struct node* next;
 } node;
 
@@ -20,7 +19,7 @@ typedef struct hash_table {
     struct node** buckets;
 } hash_table;
 
-struct hash_table* create_table(struct Arguments arg1);
+struct hash_table* create_table();
 
 // buckets
 // linkedlist
