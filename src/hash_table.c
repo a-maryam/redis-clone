@@ -21,15 +21,6 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-/* Functions for testing purposes */
-static void print_node(struct node * n) {
-    printf("------------------\n");
-    printf("Printing a node\n");
-    printf("Key: %s\n", n->key);
-    printf("Node: %s\n", n->value);
-    printf("------------------\n");
-}
-
 struct hash_table* create_table() { // should createtable take the first value to add or simply allocate? 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(struct hash_table));
@@ -49,7 +40,7 @@ struct hash_table* create_table() { // should createtable take the first value t
     return kv_store;
 }
 
-int insert(struct hash_table* kv_store, struct Arguments* arg1) {
+struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(struct node));
     if(new_node == NULL) {
@@ -61,8 +52,8 @@ int insert(struct hash_table* kv_store, struct Arguments* arg1) {
 
     if(kv_store->buckets[hash] == NULL) {
         kv_store->buckets[hash] = new_node;
-        printf("Printing from expected new insertion point\n");
-        print_node(kv_store->buckets[hash]);
+        //printf("Printing from expected new insertion point\n");
+        //print_node(kv_store->buckets[hash]);
     }
     else { // case of hash collision -> maybe this code should be moved
         struct node* temp = kv_store->buckets[hash];
@@ -72,11 +63,11 @@ int insert(struct hash_table* kv_store, struct Arguments* arg1) {
             temp = temp->next;
         }
         tail->next = new_node;
-        print_node(tail);
-        print_node(tail->next); // need to write collision tests. actually have many tests to write
+        //print_node(tail);
+        //print_node(tail->next); // need to write collision tests. actually have many tests to write
     }
 
-    return 0; 
+    return kv_store; 
 }
 
 /*int remove(struct hash_table* kv_store, char* key) {

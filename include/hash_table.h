@@ -17,6 +17,6 @@ struct hash_table {
 };
 
 struct hash_table* create_table();
-int insert(struct hash_table* kv_store, struct Arguments* arg1);
+struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1);
 
 #endif
