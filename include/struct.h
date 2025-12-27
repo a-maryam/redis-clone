@@ -15,7 +15,7 @@ enum ValueType {
 
 // union must hold pointers.
 struct Value {
-    ValueType value;
+    enum ValueType value;
     union {
         float f;
         char c; 
@@ -38,8 +38,8 @@ enum Command {
 
 struct CommandOption {
     const char *name;
-    struct Command cmd;
-}
+    enum Command cmd;
+};
 
 struct Arguments {
     enum Command command;
@@ -48,6 +48,7 @@ struct Arguments {
 };
 
 int free_arg_struct(struct Arguments* arg1);
-enum Command* parse_command(const char* command_entered) // will malloc for command / free struct should free / free is called from driver.
+enum Command parse_command(const char* command_entered); // will malloc for command / free struct should free / free is called from driver.
+
 
 #endif // STRUCT_H

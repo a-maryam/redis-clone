@@ -23,4 +23,6 @@ struct hash_table* get_value(struct hash_table*, char* key);
 struct hash_table* delete_key(struct hash_table*, char* key);
 bool key_exists(struct hash_table*, char* key);
 
+void free_hash_table(struct hash_table* kv_store);
+
 #endif

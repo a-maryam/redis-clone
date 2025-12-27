@@ -22,7 +22,7 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-struct hash_table* create_table() { // should createtable take the first value to add or simply allocate? 
+struct hash_table* create_table() { 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(struct hash_table));
     if(kv_store == NULL) {
@@ -71,10 +71,27 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     return kv_store; 
 }
 
-struct hash_table* get_value(struct hash_table*, char* key) {
+/*struct hash_table* get_value(struct hash_table*, char* key) {
 
+    
+}*/
 
+void free_hash_table(struct hash_table* kv_store) {
+    if(kv_store == NULL) return;
+    struct node* next;
+    for(int i = 0; i < kv_store->cap; i++) {
+        struct node* curr = kv_store->buckets[i];
+        while(curr!=NULL) {
+            next = curr->next;
+            free(curr);
+            curr = next;
+        }
+    }
+    free(kv_store->buckets);
+    free(kv_store);
+    return;
 }
+
 
 /*int remove(struct hash_table* kv_store, char* key) {
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);

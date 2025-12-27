@@ -2,27 +2,38 @@
 #include "../include/parser.h"
 #include "../include/read.h"
 #include "../include/struct.h"
+#include "../include/commands.h"
+#include "../include/hash_table.h"
+#include <stdio.h>
 
 int main(void) {
     struct Arguments* a1 = parse(read());
+    struct hash_table* kv_store = create_table();
 
     // command loop logic: 
+
+    switch(a1->command) {
+        case CMD_SET:
+            set(kv_store, a1);
+            break;
+        case CMD_GET:
+            get(kv_store, a1);
+            break;
+        case CMD_DEL:
+            del(kv_store, a1);
+            break;
+        case CMD_EXISTS:
+            exists(kv_store, a1);
+            break;
+        case CMD_UNKNOWN:
+            printf("Unknown command."); // should likely exit program.
+            break;
+        default:
+            printf("Unusual program behavior"); // this case should never occur.
+            break; // exit program?
+    }
     
-    /*if(strcmp(beg_arr[0], "GET")==0) { 
-        get(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "SET")==0) {
-        set(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "DEL")==0) {
-        del(kv_store, arg1);
-    }
-    else if(strcmp(beg_arr[0], "EXISTS")==0) {
-        exists(kv_store, arg1);
-    }*/
-
-    // have to rewrite Arguments struct
-
     free_arg_struct(a1);
+    free_hash_table(kv_store);
     return 0;
 }

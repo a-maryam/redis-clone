@@ -3,6 +3,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-int parse(char* input);
+struct Arguments* parse(char* input);
 
 #endif

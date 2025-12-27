@@ -46,7 +46,7 @@ struct Arguments* parse(char* input) {
 
     if(tokens_arr == NULL) {
         printf("Memory allocation for line failed\n");
-        return -1;
+        return NULL;
     }
 
     char** beg_arr = tokens_arr;
@@ -62,7 +62,7 @@ struct Arguments* parse(char* input) {
 
     if(i <= 1) {
         printf("Commands invalid");
-        return -1;
+        return NULL;
     }
 
     // need tokens, and input if passing along. 
@@ -75,7 +75,7 @@ struct Arguments* parse(char* input) {
     
     if(arg1 == NULL) {
         printf("Memory allocation for line failed\n");
-        return -1;
+        return NULL;
     }
     else { 
         arg1 -> command = command1;
