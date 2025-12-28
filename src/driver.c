@@ -11,7 +11,7 @@ int main(void) {
     struct hash_table* kv_store = create_table();
 
     // command loop logic: 
-
+    // oh yeah it's not a loop yet haha -- going to have to keep waiting for input /
     switch(a1->command) {
         case CMD_SET:
             set(kv_store, a1);

@@ -82,6 +82,8 @@ void free_hash_table(struct hash_table* kv_store) {
     for(int i = 0; i < kv_store->cap; i++) {
         struct node* curr = kv_store->buckets[i];
         while(curr!=NULL) {
+            free(curr->key);
+            free(curr->value);
             next = curr->next;
             free(curr);
             curr = next;
