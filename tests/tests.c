@@ -1,11 +1,12 @@
 // tests.c
 // will contain all tests for now
-#include <string.h>
-#include <stdlib.h>
 #include "../include/tests.h"
 #include "../include/struct.h"
 #include "../include/hash_table.h"
 #include "../include/commands.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 static void print_node(struct node * n) {
     printf("------------------\n");
@@ -31,7 +32,11 @@ int main(void) {
     strcpy(arg->value, "test_value");
 
     struct hash_table* kv = test_kv_insert(arg); // simple test to see if key and value are inserted
-    // strcmp(get(kv, arg), kv->value)
+    if(strcmp(get(kv, arg->key), arg->value)==0) {
+        printf("%s compared to %s\n", get(kv, arg->key), arg->value);
+        printf("kv_insert and get_value seem to be working."); // oop this logic should be in the test. will move
+        // not sure if wrappers are neccessary in commands.h
+    }
     free_arg_struct(arg);
 
     return 0;

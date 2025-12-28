@@ -5,14 +5,13 @@
 
 /* COMMANDS */
 // kv assumed initialized. should be in command loop. 
-int set(struct hash_table* kv, struct Arguments* arg1) {
-    insert(kv, arg1);
-    return 0;
+struct hash_table* set(struct hash_table* kv, struct Arguments* arg1) {
+    return insert(kv, arg1);
 }
 
-int get(struct hash_table* kv, struct Arguments* arg1) {
+char* get(struct hash_table* kv, char* key) {
+    return get_value(kv, key);
     
-    return 0;
 }
 
 int del(struct hash_table* kv, struct Arguments* arg1) {

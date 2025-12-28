@@ -17,7 +17,7 @@ int main(void) {
             set(kv_store, a1);
             break;
         case CMD_GET:
-            get(kv_store, a1);
+            get(kv_store, a1->key);
             break;
         case CMD_DEL:
             del(kv_store, a1);

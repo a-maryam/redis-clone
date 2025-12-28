@@ -71,10 +71,34 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     return kv_store; 
 }
 
-/*struct hash_table* get_value(struct hash_table*, char* key) {
+char* get_value(struct hash_table* kv_store, char* key) {
+    if(kv_store == NULL) {
+        printf("No table has been created."); // would definitely be caught sooner in execution
+        return NULL;
+    }
+
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
+    if(kv_store->buckets[hash] == NULL) {
+        printf("No value for key provided.");
+        return NULL;
+    }
+    else {// iterate.
+        struct node* curr = kv_store->buckets[hash];
+
+        while(curr!=NULL && strcmp(curr->key, key) != 0) {
+            curr = curr->next;
+        }
+        if(curr == NULL) {
+            printf("No value for key provided.");
+            return NULL;
+        }
+        return curr->value;
+    }
+    printf("Very unexpected behavior in get_value");
+    return NULL;
 
     
-}*/
+}
 
 void free_hash_table(struct hash_table* kv_store) {
     if(kv_store == NULL) return;

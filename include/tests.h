@@ -2,6 +2,6 @@
 #define TESTS_H
 #include "struct.h"
 
-int test_kv_insert(struct Arguments* arg1);
+struct hash_table* test_kv_insert(struct Arguments* arg1);
 
 #endif // TEST_H

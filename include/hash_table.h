@@ -19,9 +19,9 @@ struct hash_table {
 
 struct hash_table* create_table();
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1);
-struct hash_table* get_value(struct hash_table*, char* key);
-struct hash_table* delete_key(struct hash_table*, char* key);
-bool key_exists(struct hash_table*, char* key);
+char* get_value(struct hash_table* kv_store, char* key);
+struct hash_table* delete_key(struct hash_table* kv_store, char* key);
+bool key_exists(struct hash_table* kv_store, char* key);
 
 void free_hash_table(struct hash_table* kv_store);
 
