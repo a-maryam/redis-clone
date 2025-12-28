@@ -23,8 +23,8 @@ static void print_node(struct node * n) {
 static struct Arguments* create_new_arguments(char* key1, char* value1, enum Command cmd1) { // string 
     struct Arguments* arg = malloc(sizeof(struct Arguments));
 
-    arg->key = (char*)malloc(sizeof(strlen(key1))); // "test_key\0"
-    arg->value = (char*)malloc(sizeof(strlen(value1))); // "test_value\0"
+    arg->key = malloc(strlen(key1)+1); // "test_key\0"
+    arg->value = malloc(strlen(value1)+1); // "test_value\0"
     arg->command = cmd1;
 
     strcpy(arg->key, key1);
@@ -38,8 +38,8 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
 /* tests insert and get - insert depends on a get or exists */ // logic??
 bool test_kv_insert_and_get_value() {
     struct Arguments* arg = malloc(sizeof(struct Arguments));
-    arg->key = (char*)malloc(sizeof(9)); // "test_key\0"
-    arg->value = (char*)malloc(sizeof(11)); // "test_value\0"
+    arg->key = malloc(9); // "test_key\0"
+    arg->value = malloc(11); // "test_value\0"
     arg->command = CMD_SET; // actually unnecessary here
 
     strcpy(arg->key, "test_key");
@@ -49,13 +49,7 @@ bool test_kv_insert_and_get_value() {
 
     insert(kv, arg);
 
-    /*if(strcmp(get(kv, arg->key), arg->value) ==0) { // oop may not be working
-        printf("%s compared to %s\n", get(kv, arg->key), arg->value);
-        //printf("kv_insert and get_value seem to be working.\n"); // oop this logic should be in the test. will move
-        // not sure if wrappers are neccessary in commands.h
-    }*/
-
-    int result = strcmp(get(kv, arg->key), arg->value);
+    int result = strcmp(get(kv, arg->key), arg->value); // strcmp equality is 0
 
     if(result==0) {
         printf("Insert and get test passed.\n");
@@ -95,11 +89,11 @@ bool test_kv_insert_collision() {
         printf("collision test failed.");
     }
 
-    free(arg1);
-    free(arg2);
+    free_arg_struct(arg1);
+    free_arg_struct(arg2);
+    free_hash_table(kv);
 
     return result;
-
 }
 
 /*bool test_kv_get_value_when_empty() {
@@ -107,8 +101,6 @@ bool test_kv_insert_collision() {
 }*/
 
 // test empty get
-
-// collision test 
 
 // tests with more values
 
