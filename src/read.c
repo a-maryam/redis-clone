@@ -9,17 +9,18 @@ char* read() {
     char* line = malloc(line_length * sizeof(*line));
 
     if(line == NULL) {
-        printf("Memory allocation for line failed\n");
+        //printf("Memory allocation for line failed\n");
         return NULL;
     }
 
-    printf("**Toy Redis Started**\n Enter Commands:\n");
+    
     // will need to implement error handling for invalid inputs
-    if(fgets(line, line_length, stdin) != NULL) {
-        printf("Entered: %s", line);
+    if(fgets(line, line_length, stdin) == NULL) {
+        free(line);
+        return NULL;
     } 
     else {
-        printf("Error reading input.");
+        printf("Entered: %s", line); // for test purposes
     }
     return line; // seems correct
 } 

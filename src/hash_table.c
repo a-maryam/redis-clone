@@ -23,6 +23,14 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
+void print_node(struct node * n) {
+    printf("------------------\n");
+    printf("Printing a node\n");
+    printf("Key: %s\n", n->key);
+    printf("Node: %s\n", n->value);
+    printf("------------------\n");
+}
+
 struct hash_table* create_table() { 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(struct hash_table));
@@ -42,11 +50,16 @@ struct hash_table* create_table() {
     return kv_store;
 }
 
+// got a bug here
+// make sure buckets zero initialized -> write test
+// check should not be for null as well...
+
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(struct node));
     if(new_node == NULL) {
         printf("New node in insert failed allocation.");
+        return NULL;
     }
     new_node->key = strdup(arg1->key);
     new_node->value = strdup(arg1->value); // write copy_value when i go to Value struct
@@ -54,8 +67,8 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
 
     if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
         kv_store->buckets[hash] = new_node;
-        //printf("Printing from expected new insertion point\n");
-        //print_node(kv_store->buckets[hash]);
+        printf("Printing from expected new insertion point\n");
+        print_node(kv_store->buckets[hash]);
     }
     else { // case of hash collision -> maybe this code should be moved
         struct node* temp = kv_store->buckets[hash];
@@ -65,8 +78,8 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
             temp = temp->next;
         }
         tail->next = new_node;
-        //print_node(tail);
-        //print_node(tail->next); // need to write collision tests. actually have many tests to write
+        print_node(tail);
+        print_node(tail->next); // need to write collision tests. actually have many tests to write
     }
 
     return kv_store; 
@@ -74,13 +87,13 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
 
 char* get_value(struct hash_table* kv_store, char* key) {
     if(kv_store == NULL) {
-        printf("No table has been created."); // would definitely be caught sooner in execution
+        printf("No table has been created.\n"); // would definitely be caught sooner in execution
         return NULL;
     }
 
     uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
     if(kv_store->buckets[hash] == NULL) {
-        printf("No value for key provided.");
+        printf("No value for key provided.\n");
         return NULL;
     }
     else {// iterate.
@@ -90,12 +103,13 @@ char* get_value(struct hash_table* kv_store, char* key) {
             curr = curr->next;
         }
         if(curr == NULL) {
-            printf("No value for key provided.");
+            printf("No value for key provided.\n");
             return NULL;
         }
+        printf("%s", curr->value);
         return curr->value;
     }
-    printf("Very unexpected behavior in get_value");
+    printf("Very unexpected behavior in get_value\n");
     return NULL;
 
     

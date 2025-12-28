@@ -24,5 +24,5 @@ struct hash_table* delete_key(struct hash_table* kv_store, char* key);
 bool key_exists(struct hash_table* kv_store, char* key);
 
 void free_hash_table(struct hash_table* kv_store);
-
+void print_node(struct node * n);
 #endif

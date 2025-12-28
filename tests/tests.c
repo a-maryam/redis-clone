@@ -9,15 +9,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-static void print_node(struct node * n) {
-    printf("------------------\n");
-    printf("Printing a node\n");
-    printf("Key: %s\n", n->key);
-    printf("Node: %s\n", n->value);
-    printf("------------------\n");
-}
-
-
 // create new argument structs more easily.
 // caller will own memory allocated here. must free.
 static struct Arguments* create_new_arguments(char* key1, char* value1, enum Command cmd1) { // string 

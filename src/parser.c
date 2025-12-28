@@ -12,6 +12,9 @@ currently contains parser, main, read, token to char func
 // file organization: helper functions, and then in order of useage. 
 
 struct Arguments* parse(char* input) {
+    if(input==NULL) {
+        return NULL;
+    }
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
     int tokens_allowed = 4;
