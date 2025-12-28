@@ -18,6 +18,7 @@ static uint64_t hash_function(const unsigned char* str) { // high bit set charac
     return hash; 
 }
 
+// Return index
 static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }

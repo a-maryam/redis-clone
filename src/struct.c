@@ -11,15 +11,17 @@ int free_arg_struct(struct Arguments* arg1) { // what am I doing for commands th
     free(arg1);
     return 0;
 }
+
 /* might move these command related functions at some point*/
+// command -> enum mapping
 static struct CommandOption command_table[] = {
     {"SET", CMD_SET},
     {"GET", CMD_GET},
     {"DEL", CMD_DEL},
     {"EXISTS", CMD_EXISTS},
-
 };
 
+/* Return enum representation of command string provided */
 enum Command parse_command(const char* command_entered) {
     // for system agnosticism
     size_t n = sizeof(command_table) / sizeof(command_table[0]);

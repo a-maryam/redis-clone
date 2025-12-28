@@ -11,30 +11,6 @@ currently contains parser, main, read, token to char func
 
 // file organization: helper functions, and then in order of useage. 
 
-static char* token_to_char_arr(char* ptr) { // function allocates temp/beg: caller frees
-    if(ptr == NULL) return NULL;
-    // mem allocated
-    int len = 50; // totally open to change this later. 
-    char* temp = malloc(len * sizeof(*temp));
-    if(temp == NULL) {
-        printf("Memory allocation in token to char arr has failed.");
-        return NULL;
-    }
-
-    char* beg = temp;
-    
-    int i = 0; 
-    while(*ptr != '\0' && i < len - 1) {
-        printf("%c", *ptr);
-        *temp++ = *ptr++;
-        i++;
-    }
-    *temp = '\0';
-
-    printf("\nend of one char arr making run.\n");
-    return beg; // must free as well 
-}
-
 struct Arguments* parse(char* input) {
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
@@ -68,8 +44,8 @@ struct Arguments* parse(char* input) {
     // need tokens, and input if passing along. 
     // can just copy to new vars and pass. easier
     enum Command command1 = parse_command(beg_arr[0]);
-    char* key1 = token_to_char_arr(beg_arr[1]);
-    char* value1 = (i > 2 ? token_to_char_arr(beg_arr[2]) : NULL);
+    char* key1 = strdup(beg_arr[1]);
+    char* value1 = (i > 2 ? strdup(beg_arr[2]) : NULL);
     
     struct Arguments *arg1 = malloc(sizeof(struct Arguments));
     
@@ -84,11 +60,8 @@ struct Arguments* parse(char* input) {
     }
 
     free(tokens_arr); // function allocated and function freed
-     
-    // frees token_to_char_arr allocated mem
-    //free_arg_struct(arg1); // caller allocated and caller freed / container freeing.
     free(input); // read allocated, caller freed (factory pattern)
-     // tokens from input were put into new buffers 
+    
     return arg1; // caller must free now.
 }
 

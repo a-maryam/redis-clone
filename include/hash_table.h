@@ -5,7 +5,7 @@
 #include "struct.h"
 #include <stdbool.h>
 
-// don't think typedefs are working for some reason. 
+// represents key value pair
 struct node {
     char* key;
     char* value; // change to Value struct
