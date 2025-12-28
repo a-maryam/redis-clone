@@ -51,7 +51,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     new_node->value = strdup(arg1->value); // write copy_value when i go to Value struct
     new_node->next = NULL;
 
-    if(kv_store->buckets[hash] == NULL) {
+    if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
         kv_store->buckets[hash] = new_node;
         //printf("Printing from expected new insertion point\n");
         //print_node(kv_store->buckets[hash]);

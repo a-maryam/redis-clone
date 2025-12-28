@@ -27,6 +27,7 @@ struct Value {
         // lists, heaps, trees...
     } data;
 };
+
 /* maybe command things will live somewhere else later on*/
 enum Command {
     CMD_SET,
