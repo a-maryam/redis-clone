@@ -96,13 +96,16 @@ bool test_kv_insert_collision() {
     return result;
 }
 
+/* Testing get independently of insert */
 /*bool test_kv_get_value_when_empty() {
 
 }*/
 
-// test empty get
+// tests with more values, tempt more collisions
 
-// tests with more values
+// implement exists (maybe too similar to get -- guess its just a boring bool func)
+// implement delete
+// onto TCP server after
 
 int main(void) {
     int total_tests = 2;
