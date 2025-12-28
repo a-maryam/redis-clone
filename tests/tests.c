@@ -106,7 +106,11 @@ bool test_kv_insert_collision() {
 
 /* Testing get independently of insert */
 bool test_kv_get_value_when_empty() {
-    return true;
+    struct hash_table* kv = create_table();
+    char key[] = "DNE";
+    bool res = get(kv, key) == NULL;
+    if(!res) printf("Get value on empty table is not null. Test failed.");
+    return res;
 }
 
 // test that calloc is initing kvstore 
@@ -118,14 +122,15 @@ bool test_kv_get_value_when_empty() {
 // onto TCP server after
 
 int main(void) {
-    int total_tests = 2;
+    int total_tests = 3;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
     tests_passed+= (int) test_kv_insert_collision();
+    tests_passed+= (int) test_kv_get_value_when_empty();
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
-    printf("%d tests failed", total_tests-tests_passed);
+    printf("%d tests failed\n", total_tests-tests_passed);
     return 0;
 }
 
