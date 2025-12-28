@@ -35,13 +35,15 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
 
 /* hash table tests */
 
-/* tests insert and get - insert depends on a get or exists */ // logic??
+/* tests insert and get - insert is always going to depend on a get or exists */ 
 bool test_kv_insert_and_get_value() {
+    // create arg to insert into table
     struct Arguments* arg = malloc(sizeof(struct Arguments));
     arg->key = malloc(9); // "test_key\0"
     arg->value = malloc(11); // "test_value\0"
     arg->command = CMD_SET; // actually unnecessary here
 
+    // copy test values into arg
     strcpy(arg->key, "test_key");
     strcpy(arg->value, "test_value");
 
@@ -49,6 +51,7 @@ bool test_kv_insert_and_get_value() {
 
     insert(kv, arg);
 
+    // is the value in the hashtable what we want it to be for the key?
     int result = strcmp(get(kv, arg->key), arg->value); // strcmp equality is 0
 
     if(result==0) {
@@ -58,14 +61,15 @@ bool test_kv_insert_and_get_value() {
         printf("Insert and get test failed.\n");
     }
 
+    // freeing memory we own
     free_arg_struct(arg);
     free_hash_table(kv);
 
     return result == 0;
 }
 
+// create hash collisions
 bool test_kv_insert_collision() {
-    // cause same hash
     // "ab" "ba"
     struct hash_table* kv = create_table();
 
@@ -79,8 +83,12 @@ bool test_kv_insert_collision() {
 
     insert(kv, arg1);
     insert(kv, arg2);
+
+    char* res1 = get(kv, arg1->key);
+    char* res2 = get(kv, arg2->key);
     
-    bool result = (get(kv, arg1->key)!=NULL) && (get(kv, arg2->key)!=NULL);
+    // checking if both args have been inserted and that they exist in different memory.
+    bool result = res1!=NULL && res2!=NULL && res1!=res2;
 
     if(result) {
         printf("collision test passed.\n");
@@ -97,9 +105,11 @@ bool test_kv_insert_collision() {
 }
 
 /* Testing get independently of insert */
-/*bool test_kv_get_value_when_empty() {
+bool test_kv_get_value_when_empty() {
+    return true;
+}
 
-}*/
+// test that calloc is initing kvstore 
 
 // tests with more values, tempt more collisions
 
@@ -110,11 +120,12 @@ bool test_kv_insert_collision() {
 int main(void) {
     int total_tests = 2;
     int tests_passed = 0;
-    //int tests_failed = 0;
+    
     tests_passed+= (int) test_kv_insert_and_get_value();
     tests_passed+= (int) test_kv_insert_collision();
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
+    printf("%d tests failed", total_tests-tests_passed);
     return 0;
 }
 
