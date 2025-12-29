@@ -33,14 +33,14 @@ void print_node(struct node * n) {
 
 struct hash_table* create_table() { 
     const int default_size = 16;
-    struct hash_table* kv_store = malloc(sizeof(struct hash_table));
+    struct hash_table* kv_store = malloc(sizeof(struct hash_table*));
     if(kv_store == NULL) {
         printf("Memory allocation for kv_store in create_table failed");
         return NULL;
     }
 
     kv_store->cap = default_size;
-    kv_store->buckets = calloc(kv_store->cap, sizeof(struct node));
+    kv_store->buckets = calloc(kv_store->cap, sizeof(struct node*));
 
     if(kv_store->buckets == NULL) {
         printf("Memory allocation for buckets in create_table failed");
@@ -53,10 +53,10 @@ struct hash_table* create_table() {
 // got a bug here
 // make sure buckets zero initialized -> write test
 // check should not be for null as well...
-
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
+    // check for duplicate keys. 
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
-    struct node* new_node = malloc(sizeof(struct node));
+    struct node* new_node = malloc(sizeof(struct node*));
     if(new_node == NULL) {
         printf("New node in insert failed allocation.");
         return NULL;
@@ -85,7 +85,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     return kv_store; 
 }
 
-char* get_value(struct hash_table* kv_store, char* key) {
+char* get_value(struct hash_table* kv_store, char* key) { // 
     if(kv_store == NULL) {
         printf("No table has been created.\n"); // would definitely be caught sooner in execution
         return NULL;
