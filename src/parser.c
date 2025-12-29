@@ -48,7 +48,7 @@ struct Arguments* parse(char* input) {
     char* key1 = strdup(beg_arr[1]);
     char* value1 = (i > 2 ? strdup(beg_arr[2]) : NULL);
     
-    struct Arguments *arg1 = malloc(sizeof(struct Arguments*));
+    struct Arguments *arg1 = malloc(sizeof(*arg1));
     
     if(arg1 == NULL) {
         printf("Memory allocation for line failed\n");

@@ -6,7 +6,7 @@
 
 char* read() {
     int line_length = 100;
-    char* line = malloc(line_length * sizeof(*line));
+    char* line = malloc(line_length + 1 * sizeof(*line));
 
     if(line == NULL) {
         //printf("Memory allocation for line failed\n");

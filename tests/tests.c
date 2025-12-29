@@ -12,7 +12,7 @@
 // create new argument structs more easily.
 // caller will own memory allocated here. must free.
 static struct Arguments* create_new_arguments(char* key1, char* value1, enum Command cmd1) { // string 
-    struct Arguments* arg = malloc(sizeof(struct Arguments*));
+    struct Arguments* arg = malloc(sizeof(*arg));
 
     arg->key = malloc(strlen(key1)+1); // "test_key\0"
     arg->value = malloc(strlen(value1)+1); // "test_value\0"
@@ -29,9 +29,9 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
 /* tests insert and get - insert is always going to depend on a get or exists */ 
 bool test_kv_insert_and_get_value() {
     // create arg to insert into table
-    struct Arguments* arg = malloc(sizeof(struct Arguments*));
-    arg->key = malloc(9); // "test_key\0"
-    arg->value = malloc(11); // "test_value\0"
+    struct Arguments* arg = malloc(sizeof(*arg));
+    arg->key = malloc(strlen("test_key")+1); // "test_key\0"
+    arg->value = malloc(strlen("test_value")+1); // "test_value\0"
     arg->command = CMD_SET; // actually unnecessary here
 
     // copy test values into arg
