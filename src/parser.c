@@ -15,6 +15,7 @@ struct Arguments* parse(char* input) {
     if(input==NULL) {
         return NULL;
     }
+
     // forget what ur supposed to do when you have a variable number 
     // of input tokens lol
     int tokens_allowed = 4;
@@ -29,7 +30,6 @@ struct Arguments* parse(char* input) {
     }
 
     char** beg_arr = tokens_arr;
-    
     token = strtok(input, delimiters);
     int i = 0;
     
@@ -44,13 +44,11 @@ struct Arguments* parse(char* input) {
         return NULL;
     }
 
-    // need tokens, and input if passing along. 
-    // can just copy to new vars and pass. easier
     enum Command command1 = parse_command(beg_arr[0]);
     char* key1 = strdup(beg_arr[1]);
     char* value1 = (i > 2 ? strdup(beg_arr[2]) : NULL);
     
-    struct Arguments *arg1 = malloc(sizeof(struct Arguments));
+    struct Arguments *arg1 = malloc(sizeof(struct Arguments*));
     
     if(arg1 == NULL) {
         printf("Memory allocation for line failed\n");

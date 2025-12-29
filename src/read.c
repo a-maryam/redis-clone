@@ -13,7 +13,6 @@ char* read() {
         return NULL;
     }
 
-    
     // will need to implement error handling for invalid inputs
     if(fgets(line, line_length, stdin) == NULL) {
         free(line);

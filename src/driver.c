@@ -17,11 +17,6 @@ void int_handler(int signum) { // probably can remove signum
 }
 
 int main(void) {
-    /*if(signal(SIGINT, int_handler) == SIG_ERR) {
-        perror("signal");
-        exit(EXIT_FAILURE);
-    }*/
-
     struct sigaction sa = {0};
     sa.sa_handler = int_handler;
     sigemptyset(&sa.sa_mask);
@@ -30,12 +25,16 @@ int main(void) {
 
     printf("**Toy Redis Started**\n Enter Commands:\n");
     struct hash_table* kv_store = create_table();
+
     while(!exit_flag) {
         char* input = read();
+
         if(input == NULL) {
             break;
         }
+
         struct Arguments* a1 = parse(input);
+
          switch(a1->command) {
             case CMD_SET:
                 set(kv_store, a1);
@@ -56,14 +55,10 @@ int main(void) {
                 printf("Unusual program behavior"); // this case should never occur.
                 break; // exit program?
     }
+
     free_arg_struct(a1);
 }
 
-    // command loop logic: 
-    // oh yeah it's not a loop yet haha -- going to have to keep waiting for input /
-    
-    
-    
     free_hash_table(kv_store);
     return 0;
 }

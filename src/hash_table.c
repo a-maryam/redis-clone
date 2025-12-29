@@ -137,11 +137,3 @@ void free_hash_table(struct hash_table* kv_store) {
 /*int remove(struct hash_table* kv_store, char* key) {
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
 }*/
-
-
-// when should the table be created? created in main(), needs to be held onto.
-
-// who is going to create tables and who will free? 
-// allocated here and caller should free I guess, function for freeing should be in this file
-
-
