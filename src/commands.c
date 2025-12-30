@@ -11,7 +11,6 @@ struct hash_table* set(struct hash_table* kv, struct Arguments* arg1) {
 
 char* get(struct hash_table* kv, char* key) {
     return get_value(kv, key);
-    
 }
 
 int del(struct hash_table* kv, struct Arguments* arg1) {

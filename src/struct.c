@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include "../include/struct.h"
 
-
 // frees members and struct
 int free_arg_struct(struct Arguments* arg1) { // what am I doing for commands that don't have key/value or have other params?
     free(arg1->key);

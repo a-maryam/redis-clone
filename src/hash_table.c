@@ -34,6 +34,7 @@ void print_node(struct node * n) {
 struct hash_table* create_table() { 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
+    
     if(kv_store == NULL) {
         printf("Memory allocation for kv_store in create_table failed");
         return NULL;
