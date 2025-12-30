@@ -9,10 +9,10 @@ currently contains parser, main, read, token to char func
 #include "../include/commands.h"
 // probably have to change from relative to whatever best practice is
 
-// file organization: helper functions, and then in order of useage. 
-
 struct Arguments* parse(char* input) {
     if(input==NULL) {
+        free(input);
+        input = NULL;
         return NULL;
     }
 
@@ -25,6 +25,7 @@ struct Arguments* parse(char* input) {
     char** tokens_arr = malloc(tokens_allowed*sizeof(*tokens_arr));
 
     if(tokens_arr == NULL) {
+        free(tokens_arr);
         printf("Memory allocation for line failed\n");
         return NULL;
     }
@@ -40,6 +41,7 @@ struct Arguments* parse(char* input) {
     }
 
     if(i <= 1) {
+        free(tokens_arr);
         printf("Commands invalid");
         return NULL;
     }
@@ -51,6 +53,8 @@ struct Arguments* parse(char* input) {
     struct Arguments *arg1 = malloc(sizeof(*arg1));
     
     if(arg1 == NULL) {
+        free(tokens_arr);
+        free_arg_struct(arg1);
         printf("Memory allocation for line failed\n");
         return NULL;
     }
@@ -60,7 +64,8 @@ struct Arguments* parse(char* input) {
         arg1 -> value = value1;
     }
 
-    free(tokens_arr); // function allocated and function freed
+    // function allocated and function freed
+    free(tokens_arr);
     free(input); // read allocated, caller freed (factory pattern)
     
     return arg1; // caller must free now.

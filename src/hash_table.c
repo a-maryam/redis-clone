@@ -57,12 +57,14 @@ struct hash_table* create_table() {
 // check should not be for null as well...
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
     // check for duplicate keys. 
-    // testing
     // not calling from wrapper / will likely remove wrapper.
+    // should i instead do overwrites?
     if(get_value(kv_store, arg1->key)!=NULL) { // need to test after memory bug fixes.
         printf("The key provided is already in use.\n");
         return NULL;
     } 
+
+    // testing
     printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(*new_node));

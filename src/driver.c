@@ -30,12 +30,20 @@ int main(void) {
         char* input = read();
 
         if(input == NULL) {
-            break;
+            free(input);
+            continue;
         }
 
         struct Arguments* a1 = parse(input);
+        if(a1==NULL || input == NULL) {
+            free_arg_struct(a1);
+            free(input);
+            a1=NULL;
+            input = NULL;
+            continue;
+        }
 
-         switch(a1->command) {
+        switch(a1->command) {
             case CMD_SET:
                 set(kv_store, a1);
                 break;
@@ -55,10 +63,8 @@ int main(void) {
                 printf("Unusual program behavior"); // this case should never occur.
                 break; // exit program?
     }
-
-    free_arg_struct(a1);
+    if(a1!=NULL) free_arg_struct(a1);
 }
-
     free_hash_table(kv_store);
     return 0;
 }

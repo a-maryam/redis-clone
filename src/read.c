@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/read.h"
+#include <string.h>
 
 
 char* read() {
     int line_length = 100;
     char* line = malloc(line_length + 1 * sizeof(*line));
-
+    
     if(line == NULL) {
         //printf("Memory allocation for line failed\n");
         return NULL;
@@ -19,6 +20,7 @@ char* read() {
         return NULL;
     } 
     else {
+        line[strcspn(line, "\n")]='\0';
         printf("Entered: %s", line); // for test purposes
     }
     return line; // seems correct
