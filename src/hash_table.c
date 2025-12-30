@@ -57,6 +57,13 @@ struct hash_table* create_table() {
 // check should not be for null as well...
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
     // check for duplicate keys. 
+    // testing
+    // not calling from wrapper / will likely remove wrapper.
+    if(get_value(kv_store, arg1->key)!=NULL) { // need to test after memory bug fixes.
+        printf("The key provided is already in use.\n");
+        return NULL;
+    } 
+    printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(*new_node));
     
@@ -94,6 +101,10 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
 }
 
 char* get_value(struct hash_table* kv_store, char* key) { // 
+    
+    //testing
+    printf("GET key address=%p key=%s\n", (void*)key, key);
+
     if(kv_store == NULL || key == NULL) {
         //printf("No table has been created.\n"); // would definitely be caught sooner in execution
         return NULL;
@@ -105,7 +116,7 @@ char* get_value(struct hash_table* kv_store, char* key) { //
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf(curr->value);
+            printf("%s\n",curr->value);
             return curr->value;
         }
         curr = curr->next;
