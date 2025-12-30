@@ -4,7 +4,7 @@
 #include "../include/struct.h"
 
 /* COMMANDS */
-// kv assumed initialized. should be in command loop. 
+
 struct hash_table* set(struct hash_table* kv, struct Arguments* arg1) {
     return insert(kv, arg1);
 }

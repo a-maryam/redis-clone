@@ -4,7 +4,6 @@
 #include "../include/struct.h"
 #include "../include/commands.h"
 #include "../include/hash_table.h"
-//#include "../include/signal_state.h"
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -63,8 +62,10 @@ int main(void) {
                 printf("Unusual program behavior"); // this case should never occur.
                 break; // exit program?
     }
+
     if(a1!=NULL) free_arg_struct(a1);
 }
+
     free_hash_table(kv_store);
     return 0;
 }

@@ -65,7 +65,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     } 
 
     // testing
-    printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
+    //printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
     struct node* new_node = malloc(sizeof(*new_node));
     
@@ -105,7 +105,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
 char* get_value(struct hash_table* kv_store, char* key) { // 
     
     //testing
-    printf("GET key address=%p key=%s\n", (void*)key, key);
+    //printf("GET key address=%p key=%s\n", (void*)key, key);
 
     if(kv_store == NULL || key == NULL) {
         //printf("No table has been created.\n"); // would definitely be caught sooner in execution
@@ -145,7 +145,6 @@ void free_hash_table(struct hash_table* kv_store) {
     return;
 }
 
-
-/*int remove(struct hash_table* kv_store, char* key) {
+int remove(struct hash_table* kv_store, char* key) {
     uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
-}*/
+}

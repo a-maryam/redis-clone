@@ -4,7 +4,7 @@
 #include "../include/read.h"
 #include <string.h>
 
-
+/* read does NOT own line */
 char* read() {
     int line_length = 100;
     char* line = malloc(line_length + 1 * sizeof(*line));

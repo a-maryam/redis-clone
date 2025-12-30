@@ -9,6 +9,7 @@ currently contains parser, main, read, token to char func
 #include "../include/commands.h"
 // probably have to change from relative to whatever best practice is
 
+/* owns token_arr and input (from read function) */
 struct Arguments* parse(char* input) {
     if(input==NULL) {
         free(input);
