@@ -26,6 +26,7 @@ struct Value {
         // create structs for other data types later
         // lists, heaps, trees...
     } data;
+    
 };
 
 /* maybe command things will live somewhere else later on*/

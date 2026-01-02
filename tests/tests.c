@@ -3,7 +3,6 @@
 #include "../include/tests.h"
 #include "../include/struct.h"
 #include "../include/hash_table.h"
-#include "../include/commands.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -43,7 +42,7 @@ bool test_kv_insert_and_get_value() {
     insert(kv, arg);
 
     // is the value in the hashtable what we want it to be for the key?
-    int result = strcmp(get(kv, arg->key), arg->value); // strcmp equality is 0
+    int result = strcmp(get_value(kv, arg->key), arg->value); // strcmp equality is 0
 
     if(result==0) {
         printf("Insert and get test passed.\n");
@@ -75,8 +74,8 @@ bool test_kv_insert_collision() {
     insert(kv, arg1);
     insert(kv, arg2);
 
-    char* res1 = get(kv, arg1->key);
-    char* res2 = get(kv, arg2->key);
+    char* res1 = get_value(kv, arg1->key);
+    char* res2 = get_value(kv, arg2->key);
     
     // checking if both args have been inserted and that they exist in different memory.
     bool result = res1!=NULL && res2!=NULL && res1!=res2;
@@ -99,7 +98,8 @@ bool test_kv_insert_collision() {
 bool test_kv_get_value_when_empty() {
     struct hash_table* kv = create_table();
     char key[] = "DNE";
-    bool res = get(kv, key) == NULL;
+    bool res = get_value(kv, key) == NULL;
+    free_hash_table(kv);
     if(!res) printf("Get value on empty table is not null. Test failed.");
     return res;
 }
@@ -111,6 +111,8 @@ bool test_delete() {
     struct Arguments* arg1 = create_new_arguments(key, value, CMD_SET);
     insert(kv, arg1);
     delete_node(kv, key);
+    free_arg_struct(arg1);
+    free_hash_table(kv);
     return get_value(kv, key) == NULL;
 }
 

@@ -21,7 +21,7 @@ struct hash_table* create_table();
 void insert(struct hash_table* kv_store, struct Arguments* arg1);
 char* get_value(struct hash_table* kv_store, char* key);
 void delete_node(struct hash_table* kv_store, char* key);  // probably make it return void. 
-bool key_exists(struct hash_table* kv_store, char* key);
+bool node_exists(struct hash_table* kv_store, char* key);
 
 void free_hash_table(struct hash_table* kv_store);
 void print_node(struct node * n);

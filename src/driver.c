@@ -2,7 +2,6 @@
 #include "../include/parser.h"
 #include "../include/read.h" 
 #include "../include/struct.h"
-#include "../include/commands.h"
 #include "../include/hash_table.h"
 #include <stdio.h>
 #include <signal.h>
@@ -44,16 +43,16 @@ int main(void) {
 
         switch(a1->command) {
             case CMD_SET:
-                set(kv_store, a1);
+                insert(kv_store, a1);
                 break;
             case CMD_GET:
-                get(kv_store, a1->key);
+                get_value(kv_store, a1->key);
                 break;
             case CMD_DEL:
-                del(kv_store, a1);
+                delete_node(kv_store, a1->key);
                 break;
             case CMD_EXISTS:
-                exists(kv_store, a1);
+                node_exists(kv_store, a1->key);
                 break;
             case CMD_UNKNOWN:
                 printf("Unknown command."); // should likely exit program.

@@ -189,3 +189,7 @@ void delete_node(struct hash_table* kv_store, char* key) {
 
     return;
 }
+
+bool node_exists(struct hash_table* kv_store, char* key) {
+    return false;
+}
