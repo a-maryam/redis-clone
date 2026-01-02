@@ -14,7 +14,7 @@ char* get(struct hash_table* kv, char* key) {
 }
 
 int del(struct hash_table* kv, struct Arguments* arg1) {
-   
+
     return 0;
 }
 

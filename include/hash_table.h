@@ -20,7 +20,7 @@ struct hash_table {
 struct hash_table* create_table();
 struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1);
 char* get_value(struct hash_table* kv_store, char* key);
-struct hash_table* delete_key(struct hash_table* kv_store, char* key);
+void delete_node(struct hash_table* kv_store, char* key);  // probably make it return void. 
 bool key_exists(struct hash_table* kv_store, char* key);
 
 void free_hash_table(struct hash_table* kv_store);

@@ -34,7 +34,7 @@ void print_node(struct node * n) {
 struct hash_table* create_table() { 
     const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
-    
+
     if(kv_store == NULL) {
         printf("Memory allocation for kv_store in create_table failed");
         return NULL;
@@ -97,7 +97,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
         }
         tail->next = new_node;
         //print_node(tail);
-        //print_node(tail->next); // need to write collision tests. actually have many tests to write
+        //print_node(tail->next); 
     }
 
     return kv_store; 
@@ -109,7 +109,6 @@ char* get_value(struct hash_table* kv_store, char* key) { //
     //printf("GET key address=%p key=%s\n", (void*)key, key);
 
     if(kv_store == NULL || key == NULL) {
-        //printf("No table has been created.\n"); // would definitely be caught sooner in execution
         return NULL;
     }
 
@@ -146,6 +145,41 @@ void free_hash_table(struct hash_table* kv_store) {
     return;
 }
 
-int remove(struct hash_table* kv_store, char* key) {
-    uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
+void delete_node(struct hash_table* kv_store, char* key) {
+    // delete head of list
+    // delete in the middle 
+    // delete with no connection
+
+    // need to traverse the hashtable again (basically write get again)
+    if(kv_store == NULL || key == NULL) {
+        return;
+    }
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
+    // reroute the nodes
+    // i think set the node being removed to null to avoid dangling pointers
+    struct node* curr = kv_store->buckets[hash]; // if bucket empty shold go to last case.
+    struct node* prev = NULL;
+    while(curr!=NULL) {
+        if(strcmp(curr->key, key) == 0) {
+            break;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    if(prev == NULL) {
+        // should be the head case. 
+        curr = NULL; // i think this should be enough
+    }
+    else if(curr!=NULL) {
+        prev->next = curr->next;
+        free(curr);
+        curr = NULL;
+    }
+    else {
+        printf("%s", "Entered key is not in key value store.\n");
+    }
+
+    // since I wrote the nodes to be singly linked this has to be done a specific way
+
+    return;
 }

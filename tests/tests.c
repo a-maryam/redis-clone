@@ -104,6 +104,16 @@ bool test_kv_get_value_when_empty() {
     return res;
 }
 
+bool test_delete() {
+    struct hash_table* kv = create_table();
+    char[] key = "ABC";
+    char[] value = "key1"
+    //struct Arguments* arg1 = create_new_arguments(key1, value1, CMD_SET);
+    insert(kv, arg1);
+    delete_node(kv, key);
+    return get_value(kv, key) == NULL;
+}
+
 // test that calloc is initing kvstore 
 
 // tests with more values, tempt more collisions
@@ -113,12 +123,13 @@ bool test_kv_get_value_when_empty() {
 // onto TCP server after
 
 int main(void) {
-    int total_tests = 3;
+    int total_tests = 4;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
     tests_passed+= (int) test_kv_insert_collision();
     tests_passed+= (int) test_kv_get_value_when_empty();
+    tests_passed+= (int) test_delete();
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
     printf("%d tests failed\n", total_tests-tests_passed);
