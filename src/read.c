@@ -21,7 +21,7 @@ char* read() {
     } 
     else {
         line[strcspn(line, "\n")]='\0';
-        printf("Entered: %s", line); // for test purposes
+        //printf("Entered: %s\n", line); // for test purposes
     }
     return line; // seems correct
 } 

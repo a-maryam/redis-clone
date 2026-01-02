@@ -13,9 +13,9 @@ char* get(struct hash_table* kv, char* key) {
     return get_value(kv, key);
 }
 
-int del(struct hash_table* kv, struct Arguments* arg1) {
-
-    return 0;
+void del(struct hash_table* kv, struct Arguments* arg1) {
+    delete_node(kv, arg1->key);
+    return;
 }
 
 int exists(struct hash_table* kv, struct Arguments* arg1) {

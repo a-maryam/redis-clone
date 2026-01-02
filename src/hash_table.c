@@ -146,11 +146,6 @@ void free_hash_table(struct hash_table* kv_store) {
 }
 
 void delete_node(struct hash_table* kv_store, char* key) {
-    // delete head of list
-    // delete in the middle 
-    // delete with no connection
-
-    // need to traverse the hashtable again (basically write get again)
     if(kv_store == NULL || key == NULL) {
         return;
     }
@@ -166,8 +161,9 @@ void delete_node(struct hash_table* kv_store, char* key) {
         prev = curr;
         curr = curr->next;
     }
-    if(prev == NULL) {
+    if(prev == NULL) { // oops this is very wrong -- rewrite
         // should be the head case. 
+        free(curr);
         curr = NULL; // i think this should be enough
     }
     else if(curr!=NULL) {

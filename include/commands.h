@@ -6,7 +6,7 @@
 
 char* get(struct hash_table* kv, char* key);
 struct hash_table* set(struct hash_table* kv, struct Arguments* arg1);
-int del(struct hash_table* kv, struct Arguments* arg1);
+void del(struct hash_table* kv, struct Arguments* arg1);
 int exists(struct hash_table* kv, struct Arguments* arg1);
 
 #endif
