@@ -5,8 +5,8 @@
 
 /* COMMANDS */
 
-struct hash_table* set(struct hash_table* kv, struct Arguments* arg1) {
-    return insert(kv, arg1);
+void set(struct hash_table* kv, struct Arguments* arg1) {
+    insert(kv, arg1);
 }
 
 char* get(struct hash_table* kv, char* key) {

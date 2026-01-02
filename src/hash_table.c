@@ -41,11 +41,10 @@ struct hash_table* create_table() {
     }
 
     kv_store->cap = default_size;
-    kv_store->buckets = calloc(kv_store->cap, sizeof(struct node*));
+    kv_store->buckets = calloc(kv_store->cap, sizeof(struct node*)); // pointers will be null (zero initialization)
 
     if(kv_store->buckets == NULL) {
-        free(kv_store);
-        //free_hash_table(kv_store); // do i have to free all members if calloc fails?
+        free(kv_store); // do not have to free buckets bc alloc failed
         printf("Memory allocation for buckets in create_table failed");
         return NULL;
     }
@@ -56,13 +55,13 @@ struct hash_table* create_table() {
 // got a bug here
 // make sure buckets zero initialized -> write test
 // check should not be for null as well...
-struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
+void insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
     // check for duplicate keys. 
     // not calling from wrapper / will likely remove wrapper.
     // should i instead do overwrites?
     if(get_value(kv_store, arg1->key)!=NULL) { // need to test after memory bug fixes.
         printf("The key provided is already in use.\n");
-        return NULL;
+        return;
     } 
 
     // testing
@@ -72,9 +71,15 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
     
     if(new_node == NULL) {
         printf("New node in insert failed allocation.");
-        return NULL;
+        return;
     }
     new_node->key = strdup(arg1->key);
+    if(arg1->value==NULL) {
+        free(new_node->key);
+        free(new_node);
+        printf("%s", "Second parameter not provided.\n");
+        return;
+    }
     new_node->value = strdup(arg1->value); // write copy_value when i go to Value struct
     new_node->next = NULL;
 
@@ -82,13 +87,13 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
         free(new_node->key);
         free(new_node->value);
         free(new_node);
-        return NULL;
+        return;
     }
 
     if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
         kv_store->buckets[hash] = new_node;
-        printf("Printing from expected new insertion point\n");
-        print_node(kv_store->buckets[hash]);
+        //printf("Printing from expected new insertion point\n");
+        //print_node(kv_store->buckets[hash]);
     }
     else { // case of hash collision -> maybe this code should be moved
         struct node* tail = kv_store->buckets[hash];
@@ -100,7 +105,7 @@ struct hash_table* insert(struct hash_table* kv_store, struct Arguments* arg1) {
         //print_node(tail->next); 
     }
 
-    return kv_store; 
+    return; 
 }
 
 char* get_value(struct hash_table* kv_store, char* key) { // 
@@ -150,10 +155,10 @@ void delete_node(struct hash_table* kv_store, char* key) {
         return;
     }
     uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
-    // reroute the nodes
-    // i think set the node being removed to null to avoid dangling pointers
-    struct node* curr = kv_store->buckets[hash]; // if bucket empty shold go to last case.
+
+    struct node* curr = kv_store->buckets[hash];
     struct node* prev = NULL;
+
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
             break;
@@ -161,21 +166,26 @@ void delete_node(struct hash_table* kv_store, char* key) {
         prev = curr;
         curr = curr->next;
     }
-    if(prev == NULL) { // oops this is very wrong -- rewrite
-        // should be the head case. 
-        free(curr);
-        curr = NULL; // i think this should be enough
-    }
-    else if(curr!=NULL) {
-        prev->next = curr->next;
-        free(curr);
-        curr = NULL;
-    }
+
+    if(curr!=NULL) {
+        if(prev!=NULL) { // middle of the list/end of list
+            prev->next = curr->next;
+            free(curr->key);
+            free(curr->value);
+            free(curr);
+            curr = NULL;
+        }
+        else { //head case
+            kv_store->buckets[hash] = curr->next;
+            free(curr->key);
+            free(curr->value);
+            free(curr);
+            curr=NULL;
+        }
+    } 
     else {
         printf("%s", "Entered key is not in key value store.\n");
     }
-
-    // since I wrote the nodes to be singly linked this has to be done a specific way
 
     return;
 }
