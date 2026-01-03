@@ -55,7 +55,7 @@ struct hash_table* create_table() {
 // got a bug here
 // make sure buckets zero initialized -> write test
 // check should not be for null as well...
-void insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning hash_table for test purposes.
+void insert(struct hash_table* kv_store, struct Value* value) { // returning hash_table for test purposes.
     // check for duplicate keys. 
     // not calling from wrapper / will likely remove wrapper.
     // should i instead do overwrites?
@@ -108,7 +108,7 @@ void insert(struct hash_table* kv_store, struct Arguments* arg1) { // returning 
     return; 
 }
 
-char* get_value(struct hash_table* kv_store, char* key) { // 
+struct Value* get_value(struct hash_table* kv_store, char* key) { // 
     
     //testing
     //printf("GET key address=%p key=%s\n", (void*)key, key);
@@ -150,7 +150,7 @@ void free_hash_table(struct hash_table* kv_store) {
     return;
 }
 
-void delete_node(struct hash_table* kv_store, char* key) {
+void delete_node(struct hash_table* kv_store, char* key) { // destroy functions per type to be createdS
     if(kv_store == NULL || key == NULL) {
         return;
     }

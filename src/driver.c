@@ -55,7 +55,7 @@ int main(void) {
                 node_exists(kv_store, a1->key);
                 break;
             case CMD_UNKNOWN:
-                printf("Unknown command."); // should likely exit program.
+                printf("Unknown command.");
                 break;
             default:
                 printf("Unusual program behavior"); // this case should never occur.

@@ -15,22 +15,15 @@ enum ValueType {
 
 // union must hold pointers.
 struct Value {
-    enum ValueType value;
-    union {
-        float f;
-        char c; 
-        double d;
-        int i;
-        int *arr_ptr; 
-        int *char_ptr;
-        // create structs for other data types later
-        // lists, heaps, trees...
-    } data;
-    
+    enum ValueType type;
+    void *data;
+    size_t size; // for strings, arrays
+    void (*destroy)(void *); // free
+    void (*copy)(void *); // for insert
 };
 
 /* maybe command things will live somewhere else later on*/
-enum Command {
+enum Command { // need more commands per data type -- refactor i think
     CMD_SET,
     CMD_GET,
     CMD_DEL,

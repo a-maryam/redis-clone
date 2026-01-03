@@ -8,7 +8,7 @@
 // represents key value pair
 struct node {
     char* key;
-    char* value; // change to Value struct
+    Value* value; // rewriting for abstraction
     struct node* next;
 };
 
