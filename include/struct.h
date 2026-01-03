@@ -21,7 +21,7 @@ struct Value {
     void *data; 
     size_t size; // for strings, arrays
     void (*destroy)(void *); // free
-    void* (*copy)(void *);
+    Value* (*copy)(void *);
 };
 
 /* maybe command things will live somewhere else later on*/
