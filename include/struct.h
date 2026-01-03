@@ -4,22 +4,24 @@ Purpose: so far hold structs used at the heart of the key-value store
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include <stddef.h>
+
 enum ValueType {
     VALUE_FLOAT,
     VALUE_CHAR,
     VALUE_DOUBLE,
     VALUE_INT,
     VALUE_INT_PTR,
-    VALUE_CHAR_PTR
+    VALUE_STRING,
 };
 
 // union must hold pointers.
 struct Value {
     enum ValueType type;
-    void *data;
+    void *data; 
     size_t size; // for strings, arrays
     void (*destroy)(void *); // free
-    void (*copy)(void *); // for insert
+    void* (*copy)(void *);
 };
 
 /* maybe command things will live somewhere else later on*/
