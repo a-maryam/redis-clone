@@ -52,35 +52,31 @@ struct hash_table* create_table() {
     return kv_store;
 }
 
-// got a bug here
-// make sure buckets zero initialized -> write test
-// check should not be for null as well...
-void insert(struct hash_table* kv_store, struct Value* value) { // returning hash_table for test purposes.
+void insert(struct hash_table* kv_store, char* key, struct Value* value) { 
     // check for duplicate keys. 
-    // not calling from wrapper / will likely remove wrapper.
-    // should i instead do overwrites?
-    if(get_value(kv_store, arg1->key)!=NULL) { // need to test after memory bug fixes.
-        printf("The key provided is already in use.\n");
-        return;
+    
+    if(get_value(kv_store, key)!=NULL) { // need to test after memory bug fixes.
+        delete_node(kv_store, key);
+        printf("%s", "overwriting existing key.\n"); // testing 
     } 
 
     // testing
     //printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
-    uint64_t hash = bucket_index(hash_function((const unsigned char *)arg1->key), kv_store->cap);
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
     struct node* new_node = malloc(sizeof(*new_node));
     
     if(new_node == NULL) {
-        printf("New node in insert failed allocation.");
+        printf("New node in insert failed allocation."); // logging ?
         return;
     }
-    new_node->key = strdup(arg1->key);
+    new_node->key = strdup(key);
     if(arg1->value==NULL) {
         free(new_node->key);
         free(new_node);
         printf("%s", "Second parameter not provided.\n");
         return;
     }
-    new_node->value = strdup(arg1->value); // write copy_value when i go to Value struct
+    new_node->value = value; // do i need copy value?
     new_node->next = NULL;
 
     if(new_node->key==NULL || new_node->value==NULL) {
@@ -95,7 +91,7 @@ void insert(struct hash_table* kv_store, struct Value* value) { // returning has
         //printf("Printing from expected new insertion point\n");
         //print_node(kv_store->buckets[hash]);
     }
-    else { // case of hash collision -> maybe this code should be moved
+    else { 
         struct node* tail = kv_store->buckets[hash];
         while(tail->next != NULL) {
             tail = tail->next;
