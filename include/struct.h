@@ -20,8 +20,8 @@ struct Value { // not sure if it should be void
     enum ValueType type;
     void *data; 
     size_t size; // for strings, arrays
-    void (*destroy)(Value *); // free
-    Value* (*copy)(Value *);
+    void (*destroy)(struct Value *); // free
+    struct Value* (*copy)(struct Value *);
 };
 
 /* maybe command things will live somewhere else later on*/

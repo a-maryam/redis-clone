@@ -18,7 +18,7 @@ static struct CommandOption command_table[] = {
     {"SSET", STR_SET},
     {"SGET", STR_GET},
     {"SDEL", STR_DEL},
-    {"EXISTS", CMD_EXISTS},
+    {"EXISTS", KEY_EXISTS},
 };
 
 /* Return enum representation of command string provided */

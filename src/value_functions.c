@@ -3,27 +3,31 @@
 #include "../include/value_functions.h"
 #include <string.h>
 #include "../include/hash_table.h"
+#include <stdlib.h>
 
 // get command 
 // create values
 // insert into buckets
 
 //Value* create_int_value(int x);
-Value* create_string_value(const char* s) { // will be called based on command from user / cannot infer user-entered types
-    Value* res = malloc(sizeof(*res));
+struct Value* create_string_value(const char* s) { // will be called based on command from user / cannot infer user-entered types
+    struct Value* res = malloc(sizeof(*res));
     res->type = VALUE_STRING;
-    res->data = s;
+    res->data = strdup(s);
     res->size = strlen(s);
     res->destroy = destroy_string;
     res->copy = copy_string;
+    return res;
 }
 
-void destroy_string(Value* val) {
+void destroy_string(struct Value* val) {
+    free(val->data); 
     free(val);
 }
 
-Value* copy_string(Value* old_value) {
-    Value* new_value = malloc(sizeof(*new_value)); 
+/* creates new value with all the data of old value */
+struct Value* copy_string(struct Value* old_value) {
+    struct Value* new_value = malloc(sizeof(*new_value)); 
     new_value->type = old_value->type;
     new_value->data = old_value->data;
     new_value->size = old_value->size;

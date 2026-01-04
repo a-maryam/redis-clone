@@ -23,13 +23,13 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-void print_node(struct node * n) {
+/*void print_node(struct node * n) {
     printf("------------------\n");
     printf("Printing a node\n");
     printf("Key: %s\n", n->key);
-    printf("Node: %s\n", n->value);
+    printf("Node: %s\n", n->value->data);
     printf("------------------\n");
-}
+}*/
 
 struct hash_table* create_table() { 
     const int default_size = 16;
@@ -52,12 +52,20 @@ struct hash_table* create_table() {
     return kv_store;
 }
 
+/* insert takes ownership for value in the case it fails to be inserted - otherwise it is freed when hashtable is */
 void insert(struct hash_table* kv_store, char* key, struct Value* value) { 
+    if(!kv_store || !key || !value) {
+        value->destroy(value);
+        return;
+    }
+
     // check for duplicate keys. 
-    
-    if(get_value(kv_store, key)!=NULL) { // need to test after memory bug fixes.
-        delete_node(kv_store, key);
+    struct Value* value_pre_existing = get_value(kv_store, key);
+    if(value_pre_existing!=NULL) { //iffy
+        value_pre_existing->copy(value);
+        value->destroy(value); 
         printf("%s", "overwriting existing key.\n"); // testing 
+        return;
     } 
 
     // testing
@@ -66,13 +74,15 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
     struct node* new_node = malloc(sizeof(*new_node));
     
     if(new_node == NULL) {
+        value->destroy(value); // took on middle man ownership basically
         printf("New node in insert failed allocation."); // logging ?
         return;
     }
     new_node->key = strdup(key);
-    if(arg1->value==NULL) {
+    if(value==NULL) {
         free(new_node->key);
         free(new_node);
+        value->destroy(value);
         printf("%s", "Second parameter not provided.\n");
         return;
     }
@@ -81,7 +91,7 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
 
     if(new_node->key==NULL || new_node->value==NULL) {
         free(new_node->key);
-        free(new_node->value);
+        new_node->value->destroy(new_node->value);
         free(new_node);
         return;
     }
@@ -119,7 +129,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf("%s\n",curr->value);
+            //printf("%s\n",curr->value);
             return curr->value;
         }
         curr = curr->next;
@@ -135,7 +145,7 @@ void free_hash_table(struct hash_table* kv_store) {
         struct node* curr = kv_store->buckets[i];
         while(curr!=NULL) {
             free(curr->key);
-            free(curr->value);
+            curr->value->destroy(curr->value);
             next = curr->next;
             free(curr);
             curr = next;
@@ -146,7 +156,7 @@ void free_hash_table(struct hash_table* kv_store) {
     return;
 }
 
-void delete_node(struct hash_table* kv_store, char* key) { // destroy functions per type to be createdS
+void delete_node(struct hash_table* kv_store, char* key) { 
     if(kv_store == NULL || key == NULL) {
         return;
     }
@@ -167,14 +177,14 @@ void delete_node(struct hash_table* kv_store, char* key) { // destroy functions 
         if(prev!=NULL) { // middle of the list/end of list
             prev->next = curr->next;
             free(curr->key);
-            free(curr->value);
+            curr->value->destroy(curr->value);
             free(curr);
             curr = NULL;
         }
         else { //head case
             kv_store->buckets[hash] = curr->next;
             free(curr->key);
-            free(curr->value);
+            curr->value->destroy(curr->value);
             free(curr);
             curr=NULL;
         }

@@ -45,7 +45,7 @@ int main(void) {
         // Values inserted in hashtable, should be freed there
         switch(a1->command) {
             case STR_SET:
-                Value* str_value = create_string_value(a1->value);
+                struct Value* str_value = create_string_value(a1->value);
                 insert(kv_store, a1->key, str_value);
                 break;
             case STR_GET:
