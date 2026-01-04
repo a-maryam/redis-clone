@@ -16,20 +16,20 @@ enum ValueType {
 };
 
 // union must hold pointers.
-struct Value {
+struct Value { // not sure if it should be void
     enum ValueType type;
     void *data; 
     size_t size; // for strings, arrays
-    void (*destroy)(void *); // free
-    Value* (*copy)(void *);
+    void (*destroy)(Value *); // free
+    Value* (*copy)(Value *);
 };
 
 /* maybe command things will live somewhere else later on*/
 enum Command { // need more commands per data type -- refactor i think
-    CMD_SET,
-    CMD_GET,
-    CMD_DEL,
-    CMD_EXISTS, 
+    STR_SET,
+    STR_GET,
+    STR_DEL,
+    KEY_EXISTS, 
     CMD_UNKNOWN
 };
 

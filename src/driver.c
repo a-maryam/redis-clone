@@ -41,17 +41,19 @@ int main(void) {
             continue;
         }
 
+        // Values inserted in hashtable, should be freed there
         switch(a1->command) {
-            case CMD_SET:
+            case STR_SET:
+                //Value* 
                 insert(kv_store, a1);
                 break;
-            case CMD_GET:
+            case STR_GET:
                 get_value(kv_store, a1->key);
                 break;
-            case CMD_DEL:
+            case STR_DEL:
                 delete_node(kv_store, a1->key);
                 break;
-            case CMD_EXISTS:
+            case KEY_EXISTS:
                 node_exists(kv_store, a1->key);
                 break;
             case CMD_UNKNOWN:
