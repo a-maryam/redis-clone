@@ -12,8 +12,10 @@
 //Value* create_int_value(int x);
 struct Value* create_string_value(const char* s) { // will be called based on command from user / cannot infer user-entered types
     struct Value* res = malloc(sizeof(*res));
+    if(!res) return NULL;
     res->type = VALUE_STRING;
     res->data = strdup(s);
+    if(!res->data) return NULL;
     res->size = strlen(s);
     res->destroy = destroy_string;
     res->copy = copy_string;
@@ -28,8 +30,9 @@ void destroy_string(struct Value* val) {
 /* creates new value with all the data of old value */
 struct Value* copy_string(struct Value* old_value) {
     struct Value* new_value = malloc(sizeof(*new_value)); 
+    if(!new_value) return NULL;
     new_value->type = old_value->type;
-    new_value->data = old_value->data;
+    new_value->data = strdup(old_value->data);
     new_value->size = old_value->size;
     new_value->destroy = old_value->destroy;
     new_value->copy = old_value->copy;

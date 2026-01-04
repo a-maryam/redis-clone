@@ -60,13 +60,12 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
     }
 
     // check for duplicate keys. 
-    struct Value* value_pre_existing = get_value(kv_store, key);
-    if(value_pre_existing!=NULL) { //iffy
-        value_pre_existing->copy(value);
-        value->destroy(value); 
-        printf("%s", "overwriting existing key.\n"); // testing 
+    struct node* n = get_node(kv_store, key);
+    if (n) {
+        n->value->destroy(n->value);
+        n->value = value;
         return;
-    } 
+    }
 
     // testing
     //printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
@@ -74,22 +73,15 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
     struct node* new_node = malloc(sizeof(*new_node));
     
     if(new_node == NULL) {
-        value->destroy(value); // took on middle man ownership basically
+        value->destroy(value); 
         printf("New node in insert failed allocation."); // logging ?
         return;
     }
     new_node->key = strdup(key);
-    if(value==NULL) {
-        free(new_node->key);
-        free(new_node);
-        value->destroy(value);
-        printf("%s", "Second parameter not provided.\n");
-        return;
-    }
     new_node->value = value; // do i need copy value?
     new_node->next = NULL;
 
-    if(new_node->key==NULL || new_node->value==NULL) {
+    if(new_node->key==NULL) {
         free(new_node->key);
         new_node->value->destroy(new_node->value);
         free(new_node);
@@ -129,7 +121,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            //printf("%s\n",curr->value);
+            printf("%s\n",(char*)(curr->value->data)); // write print function
             return curr->value;
         }
         curr = curr->next;
@@ -198,4 +190,23 @@ void delete_node(struct hash_table* kv_store, char* key) {
 
 bool node_exists(struct hash_table* kv_store, char* key) {
     return false;
+}
+
+struct node* get_node(struct hash_table* kv_store, char* key) {
+     if(kv_store == NULL || key == NULL) {
+        return NULL;
+    }
+
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
+   
+    struct node* curr = kv_store->buckets[hash];
+
+    while(curr!=NULL) {
+        if(strcmp(curr->key, key) == 0) {
+            //printf("%s\n",(char*)(curr->value->data)); // write print function
+            return curr;
+        }
+        curr = curr->next;
+    }
+    return NULL;
 }

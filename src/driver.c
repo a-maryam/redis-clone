@@ -55,7 +55,7 @@ int main(void) {
                 delete_node(kv_store, a1->key);
                 break;
             case KEY_EXISTS:
-                //node_exists(kv_store, a1->key);
+                node_exists(kv_store, a1->key);
                 break;
             case CMD_UNKNOWN:
                 printf("Unknown command.");
