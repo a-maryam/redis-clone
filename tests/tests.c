@@ -3,6 +3,7 @@
 #include "../include/tests.h"
 #include "../include/struct.h"
 #include "../include/hash_table.h"
+#include "../include/value_functions.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,7 +38,7 @@ bool test_kv_insert_and_get_value() {
     insert(kv, test_key, str_value);
 
     // is the value in the hashtable what we want it to be for the key?
-    int result = strcmp(get_value(kv, test_key); // strcmp equality is 0
+    int result = strcmp((char*)get_value(kv, test_key)->data, test_val); // strcmp equality is 0
 
     if(result==0) {
         printf("Insert and get test passed.\n");
@@ -61,14 +62,14 @@ bool test_kv_insert_collision() {
     char value1[] = "1";
     char value2[] = "2";
 
-    struct Arguments* arg1 = create_new_arguments(key1, value1, CMD_SET);
-    struct Arguments* arg2 = create_new_arguments(key2, value2, CMD_SET);
+    struct Value* v1 = create_string_value(value1);
+    struct Value* v2 = create_string_value(value2);
 
-    insert(kv, arg1);
-    insert(kv, arg2);
+    insert(kv, key1, v1);
+    insert(kv, key2, v2);
 
-    char* res1 = get_value(kv, arg1->key);
-    char* res2 = get_value(kv, arg2->key);
+    char* res1 = (char*) get_value(kv, key1)->data;
+    char* res2 = (char*) get_value(kv, key2)->data;
     
     // checking if both args have been inserted and that they exist in different memory.
     bool result = res1!=NULL && res2!=NULL && res1!=res2;
@@ -80,8 +81,6 @@ bool test_kv_insert_collision() {
         printf("collision test failed.");
     }
 
-    free_arg_struct(arg1);
-    free_arg_struct(arg2);
     free_hash_table(kv);
 
     return result;
@@ -99,14 +98,19 @@ bool test_kv_get_value_when_empty() {
 
 bool test_delete() {
     struct hash_table* kv = create_table();
+
     char key[] = "ABC";
     char value[] = "123";
-    struct Arguments* arg1 = create_new_arguments(key, value, CMD_SET);
-    insert(kv, arg1);
+    struct Value* v1 = create_string_value(value);
+
+    insert(kv, key, v1);
     delete_node(kv, key);
-    free_arg_struct(arg1);
+
+    bool res = get_value(kv, key) == NULL;
+
     free_hash_table(kv);
-    return get_value(kv, key) == NULL;
+
+    return res;
 }
 
 // test that calloc is initing kvstore 
@@ -114,7 +118,6 @@ bool test_delete() {
 // tests with more values, tempt more collisions
 
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
-// implement delete
 
 int main(void) {
     int total_tests = 4;
