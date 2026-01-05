@@ -10,7 +10,7 @@
 // insert into buckets
 
 //Value* create_int_value(int x);
-struct Value* create_string_value(const char* s) { // will be called based on command from user / cannot infer user-entered types
+struct Value* create_string_value(char* s) { // will be called based on command from user / cannot infer user-entered types
     struct Value* res = malloc(sizeof(*res));
     if(!res) return NULL;
     res->type = VALUE_STRING;

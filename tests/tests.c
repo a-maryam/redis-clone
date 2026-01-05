@@ -23,26 +23,21 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
     return arg;
 }
 
+// main (driver) -> input -> args -> switchcase -> *create value if needed* -> call hashtable commands
+
 /* hash table tests */
 
 /* tests insert and get - insert is always going to depend on a get or exists */ 
 bool test_kv_insert_and_get_value() {
-    // create arg to insert into table
-    struct Arguments* arg = malloc(sizeof(*arg));
-    arg->key = malloc(strlen("test_key")+1); // "test_key\0"
-    arg->value = malloc(Sstrlen("test_value")+1); // "test_value\0"
-    arg->command = SSET; // actually unnecessary here
-
-    // copy test values into arg
-    strcpy(arg->key, "test_key");
-    strcpy(arg->value, "test_value");
-
+    /* should make this const but I know my function does not modify.*/
     struct hash_table* kv = create_table();
-
-    insert(kv, arg);
+    char* test_key = "TEST_KEY";
+    char* test_val = "TEST_VALUE";
+    struct Value* str_value = create_string_value(test_val);
+    insert(kv, test_key, str_value);
 
     // is the value in the hashtable what we want it to be for the key?
-    int result = strcmp(get_value(kv, arg->key), arg->value); // strcmp equality is 0
+    int result = strcmp(get_value(kv, test_key); // strcmp equality is 0
 
     if(result==0) {
         printf("Insert and get test passed.\n");
@@ -51,8 +46,6 @@ bool test_kv_insert_and_get_value() {
         printf("Insert and get test failed.\n");
     }
 
-    // freeing memory we own
-    free_arg_struct(arg);
     free_hash_table(kv);
 
     return result == 0;
