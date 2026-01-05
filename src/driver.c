@@ -1,4 +1,4 @@
-/* driver.c: main of program*/
+/* driver.c: main of program */
 #include "../include/parser.h"
 #include "../include/read.h" 
 #include "../include/struct.h"

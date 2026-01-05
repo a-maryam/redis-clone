@@ -1,6 +1,7 @@
 /* struct.h 
 Purpose: so far hold structs used at the heart of the key-value store
 */
+
 #ifndef STRUCT_H
 #define STRUCT_H
 
@@ -15,8 +16,7 @@ enum ValueType {
     VALUE_STRING,
 };
 
-// union must hold pointers.
-struct Value { // not sure if it should be void
+struct Value { 
     enum ValueType type;
     void *data; 
     size_t size; // for strings, arrays
@@ -25,7 +25,7 @@ struct Value { // not sure if it should be void
 };
 
 /* maybe command things will live somewhere else later on*/
-enum Command { // need more commands per data type -- refactor i think
+enum Command { // need more commands per data type
     STR_SET,
     STR_GET,
     STR_DEL,

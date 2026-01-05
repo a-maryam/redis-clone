@@ -30,8 +30,8 @@ bool test_kv_insert_and_get_value() {
     // create arg to insert into table
     struct Arguments* arg = malloc(sizeof(*arg));
     arg->key = malloc(strlen("test_key")+1); // "test_key\0"
-    arg->value = malloc(strlen("test_value")+1); // "test_value\0"
-    arg->command = CMD_SET; // actually unnecessary here
+    arg->value = malloc(Sstrlen("test_value")+1); // "test_value\0"
+    arg->command = SSET; // actually unnecessary here
 
     // copy test values into arg
     strcpy(arg->key, "test_key");
@@ -122,7 +122,6 @@ bool test_delete() {
 
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 // implement delete
-// onto TCP server after
 
 int main(void) {
     int total_tests = 4;
