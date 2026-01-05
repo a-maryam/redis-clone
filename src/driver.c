@@ -23,7 +23,8 @@ int main(void) {
     sigaction(SIGINT, &sa, NULL);
 
     printf("**Toy Redis Started**\n Enter Commands:\n\n");
-    struct hash_table* kv_store = create_table();
+    int default_size = 16;
+    struct hash_table* kv_store = create_table(default_size);
 
     while(!exit_flag) {
         char* input = read();

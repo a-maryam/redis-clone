@@ -23,6 +23,21 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
+void hash_table* resize_table(struct hash_table** kv) {
+    // remember to destroy original 
+    struct hash_table* old_kv = *kv;
+    struct hash_table* new_kv = create_table(old_kv->cap*2);
+    copy_table(old_kv, new_kv);
+    free_hash_table(old_kv); // this is wrong 
+    *kv = new_kv;
+    return;
+}
+
+void hash_table* copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
+    // write copy table
+    return;
+}
+
 /*void print_node(struct node * n) {
     printf("------------------\n");
     printf("Printing a node\n");
@@ -31,8 +46,8 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     printf("------------------\n");
 }*/
 
-struct hash_table* create_table() { 
-    const int default_size = 16;
+struct hash_table* create_table(int size) { 
+    //const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
 
     if(kv_store == NULL) {
@@ -40,8 +55,9 @@ struct hash_table* create_table() {
         return NULL;
     }
 
-    kv_store->cap = default_size;
+    kv_store->cap = size;
     kv_store->buckets = calloc(kv_store->cap, sizeof(struct node*)); // pointers will be null (zero initialization)
+    kv_store->size = 0;
 
     if(kv_store->buckets == NULL) {
         free(kv_store); // do not have to free buckets bc alloc failed
@@ -66,9 +82,13 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
         n->value = value;
         return;
     }
+    int load_factor = 0.75;
 
-    // testing
-    //printf("INSERT key address=%p key=%s\n", (void*)arg1->key, arg1->key);
+    // check load factor
+    if(kv_store->size / kv_store->cap >= load_factor) {
+        resize_table(&kv_store);
+    }
+
     uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
     struct node* new_node = malloc(sizeof(*new_node));
     
@@ -90,8 +110,6 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
 
     if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
         kv_store->buckets[hash] = new_node;
-        //printf("Printing from expected new insertion point\n");
-        //print_node(kv_store->buckets[hash]);
     }
     else { 
         struct node* tail = kv_store->buckets[hash];
@@ -99,17 +117,13 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
             tail = tail->next;
         }
         tail->next = new_node;
-        //print_node(tail);
-        //print_node(tail->next); 
     }
 
+    kv_store->size+=1;
     return; 
 }
 
 struct Value* get_value(struct hash_table* kv_store, char* key) { // 
-    
-    //testing
-    //printf("GET key address=%p key=%s\n", (void*)key, key);
 
     if(kv_store == NULL || key == NULL) {
         return NULL;
@@ -121,7 +135,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf("%s\n",(char*)(curr->value->data)); // write print function
+            printf("printing string value:%s\n",(char*)(curr->value->data)); // write print function
             return curr->value;
         }
         curr = curr->next;

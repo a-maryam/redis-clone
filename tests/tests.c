@@ -9,6 +9,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// rewrite tests to have size arg in create table call
+
+// write string generator for short strings 
+// loop to create a bunch of Values and insert into table
+// test load factor
+
 // create new argument structs more easily.
 // caller will own memory allocated here. must free.
 static struct Arguments* create_new_arguments(char* key1, char* value1, enum Command cmd1) { // string 
@@ -78,7 +84,7 @@ bool test_kv_insert_collision() {
         printf("collision test passed.\n");
     }
     else {
-        printf("collision test failed.");
+        printf("collision test failed.\n");
     }
 
     free_hash_table(kv);
@@ -92,7 +98,7 @@ bool test_kv_get_value_when_empty() {
     char key[] = "DNE";
     bool res = get_value(kv, key) == NULL;
     free_hash_table(kv);
-    if(!res) printf("Get value on empty table is not null. Test failed.");
+    if(!res) printf("Get value on empty table is not null. Test failed.\n");
     return res;
 }
 

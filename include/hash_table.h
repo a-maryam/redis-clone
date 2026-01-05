@@ -15,6 +15,7 @@ struct node {
 struct hash_table {
     int cap; // capacity
     struct node** buckets; // linkedlist of linkedlist
+    int size; // increment on insertion
 };
 
 struct hash_table* create_table();
