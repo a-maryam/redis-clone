@@ -16,8 +16,6 @@ struct Arguments* parse(char* input) {
         return NULL;
     }
 
-    // forget what ur supposed to do when you have a variable number 
-    // of input tokens lol
     int tokens_allowed = 4;
     const char delimiters[] = " "; // might want to accommodate extra whitespace in future
     char* token;

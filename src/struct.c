@@ -12,7 +12,6 @@ int free_arg_struct(struct Arguments* arg1) { // what am I doing for commands th
     return 0;
 }
 
-/* might move these command related functions at some point*/
 // command -> enum mapping
 static struct CommandOption command_table[] = {
     {"SSET", STR_SET},

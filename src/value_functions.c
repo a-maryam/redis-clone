@@ -9,7 +9,8 @@
 // create values
 // insert into buckets
 
-//Value* create_int_value(int x);
+//Value* create_int_value(int x) { TODO }
+
 struct Value* create_string_value(char* s) { // will be called based on command from user / cannot infer user-entered types
     struct Value* res = malloc(sizeof(*res));
     if(!res) return NULL;
@@ -17,6 +18,7 @@ struct Value* create_string_value(char* s) { // will be called based on command 
     res->data = strdup(s);
     if(!res->data) return NULL;
     res->size = strlen(s);
+    // function pointers
     res->destroy = destroy_string;
     res->copy = copy_string;
     return res;

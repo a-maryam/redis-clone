@@ -12,7 +12,6 @@ enum ValueType {
     VALUE_CHAR,
     VALUE_DOUBLE,
     VALUE_INT,
-    VALUE_INT_PTR,
     VALUE_STRING,
 };
 

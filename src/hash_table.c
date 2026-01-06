@@ -24,7 +24,6 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
 }
 
 void hash_table* resize_table(struct hash_table** kv) {
-    // remember to destroy original 
     struct hash_table* old_kv = *kv;
     struct hash_table* new_kv = create_table(old_kv->cap*2);
     copy_table(old_kv, new_kv);
@@ -38,16 +37,15 @@ void hash_table* copy_table(struct hash_table* old_kv, struct hash_table* new_kv
     return;
 }
 
-/*void print_node(struct node * n) {
+void print_node(struct node * n) {
     printf("------------------\n");
     printf("Printing a node\n");
     printf("Key: %s\n", n->key);
-    printf("Node: %s\n", n->value->data);
+    printf("Node: %s\n", (str*)n->value->data);
     printf("------------------\n");
-}*/
+}
 
 struct hash_table* create_table(int size) { 
-    //const int default_size = 16;
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
 
     if(kv_store == NULL) {
@@ -68,7 +66,8 @@ struct hash_table* create_table(int size) {
     return kv_store;
 }
 
-/* insert takes ownership for value in the case it fails to be inserted - otherwise it is freed when hashtable is */
+// i feel like this may be bad design but since we keep looping after command failures it seems necessary
+/* insert takes ownership for value in the case it fails to be inserted - otherwise it is freed when (owned by hashtable) hashtable is */
 void insert(struct hash_table* kv_store, char* key, struct Value* value) { 
     if(!kv_store || !key || !value) {
         value->destroy(value);
@@ -98,8 +97,7 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
         return;
     }
     new_node->key = strdup(key);
-    new_node->value = value; // do i need copy value?
-    new_node->next = NULL;
+    
 
     if(new_node->key==NULL) {
         free(new_node->key);
@@ -107,6 +105,9 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
         free(new_node);
         return;
     }
+
+    new_node->value = value; // do i need copy value?
+    new_node->next = NULL;
 
     if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
         kv_store->buckets[hash] = new_node;
@@ -187,7 +188,7 @@ void delete_node(struct hash_table* kv_store, char* key) {
             free(curr);
             curr = NULL;
         }
-        else { //head case
+        else { // head case
             kv_store->buckets[hash] = curr->next;
             free(curr->key);
             curr->value->destroy(curr->value);
@@ -217,7 +218,6 @@ struct node* get_node(struct hash_table* kv_store, char* key) {
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            //printf("%s\n",(char*)(curr->value->data)); // write print function
             return curr;
         }
         curr = curr->next;
