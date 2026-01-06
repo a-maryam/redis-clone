@@ -27,14 +27,30 @@ void hash_table* resize_table(struct hash_table** kv) {
     struct hash_table* old_kv = *kv;
     struct hash_table* new_kv = create_table(old_kv->cap*2);
     copy_table(old_kv, new_kv);
-    free_hash_table(old_kv); // this is wrong 
+    free_hash_table(old_kv); 
     *kv = new_kv;
     return;
 }
 
-void hash_table* copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
-    // write copy table
+void copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
+    for(int i = 0; i < old_kv->cap; i++) {
+        struct node* curr = old_kv->buckets[i];
+        struct node* new_curr = new_kv->buckets[i];
+        while(curr!=NULL) {
+            new_curr = copy_node(curr, new_curr);
+            if(curr->next != NULL) {
+                new_curr = new_curr->next;
+            }
+            curr = curr->next;
+        }
+    }
     return;
+}
+
+void copy_node(struct node* old_n, struct node* new_n) {
+    new_n->key = strdup(old_n->key);
+    new_n->value = old_n->value->copy(old_n->value);
+    new_n->next = NULL;
 }
 
 void print_node(struct node * n) {
@@ -125,7 +141,6 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
 }
 
 struct Value* get_value(struct hash_table* kv_store, char* key) { // 
-
     if(kv_store == NULL || key == NULL) {
         return NULL;
     }
