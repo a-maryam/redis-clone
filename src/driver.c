@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 volatile sig_atomic_t exit_flag = 0;
 
@@ -32,7 +33,7 @@ int main(void) {
     struct hash_table* kv_store = create_table(default_size);
 
     while(!exit_flag) {
-        char* input = read();
+        char* input = read_input();
 
         if(input == NULL) {
             printf("%s\n", "Something went wrong reading your input. Try again.");
@@ -42,7 +43,6 @@ int main(void) {
 
         struct Arguments* a1 = parse(input);
         if(a1==NULL || input == NULL) {
-            printf("%s\n", "Something went wrong processing your input. Try again.");
             free_arg_struct(a1);
             free(input);
             a1=NULL;
@@ -55,7 +55,7 @@ int main(void) {
             case STR_SET:
                 // pass ownership to insert in case of alloc failures there o/w owned by hashtable
                 struct Value* str_value = create_string_value(a1->value); 
-                insert(kv_store, a1->key, str_value);
+                insert(&kv_store, a1->key, str_value);
                 break;
             case STR_GET:
                 get_value(kv_store, a1->key);

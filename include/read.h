@@ -4,6 +4,6 @@
 #define READ_H
 
 // Allocates buffer for input, caller owns and frees
-char* read();
+char* read_input();
 
 #endif

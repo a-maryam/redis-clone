@@ -23,9 +23,10 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
     return hash % size;
 }
 
-void hash_table* resize_table(struct hash_table** kv) {
+void resize_table(struct hash_table** kv) {
     struct hash_table* old_kv = *kv;
-    struct hash_table* new_kv = create_table(old_kv->cap*2);
+    struct hash_table* new_kv = create_table(old_kv->cap * 2);
+    new_kv->size = old_kv->size;
     copy_table(old_kv, new_kv);
     free_hash_table(old_kv); 
     *kv = new_kv;
@@ -34,14 +35,12 @@ void hash_table* resize_table(struct hash_table** kv) {
 
 void copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
     for(int i = 0; i < old_kv->cap; i++) {
-        struct node* curr = old_kv->buckets[i];
-        struct node* new_curr = new_kv->buckets[i];
-        while(curr!=NULL) {
-            new_curr = copy_node(curr, new_curr);
-            if(curr->next != NULL) {
-                new_curr = new_curr->next;
-            }
-            curr = curr->next;
+        struct node* old_curr = old_kv->buckets[i];
+
+        while(old_curr!=NULL) {
+            struct Value* new_val = old_curr->value->copy(old_curr->value);
+            insert(&new_kv, old_curr->key, new_val); // insert owns key: key strdup there
+            old_curr = old_curr->next;
         }
     }
     return;
@@ -57,11 +56,11 @@ void print_node(struct node * n) {
     printf("------------------\n");
     printf("Printing a node\n");
     printf("Key: %s\n", n->key);
-    printf("Node: %s\n", (str*)n->value->data);
+    printf("Node: %s\n", (char*)n->value->data);
     printf("------------------\n");
 }
 
-struct hash_table* create_table(int size) { 
+struct hash_table* create_table(int capacity) { 
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
 
     if(kv_store == NULL) {
@@ -69,7 +68,7 @@ struct hash_table* create_table(int size) {
         return NULL;
     }
 
-    kv_store->cap = size;
+    kv_store->cap = capacity;
     kv_store->buckets = calloc(kv_store->cap, sizeof(struct node*)); // pointers will be null (zero initialization)
     kv_store->size = 0;
 
@@ -84,27 +83,28 @@ struct hash_table* create_table(int size) {
 
 // i feel like this may be bad design but since we keep looping after command failures it seems necessary
 /* insert takes ownership for value in the case it fails to be inserted - otherwise it is freed when (owned by hashtable) hashtable is */
-void insert(struct hash_table* kv_store, char* key, struct Value* value) { 
+void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
     if(!kv_store || !key || !value) {
         value->destroy(value);
         return;
     }
 
     // check for duplicate keys. 
-    struct node* n = get_node(kv_store, key);
+    struct node* n = get_node(*kv_store, key);
     if (n) {
         n->value->destroy(n->value);
         n->value = value;
         return;
     }
-    int load_factor = 0.75;
+    double load_factor = 0.75;
+    load_factor = 0.0; // test
 
     // check load factor
-    if(kv_store->size / kv_store->cap >= load_factor) {
-        resize_table(&kv_store);
+    if((double)(*kv_store)->size / (*kv_store)->cap >= load_factor) {
+        resize_table(kv_store);
     }
 
-    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), kv_store->cap);
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), (*kv_store)->cap);
     struct node* new_node = malloc(sizeof(*new_node));
     
     if(new_node == NULL) {
@@ -125,18 +125,18 @@ void insert(struct hash_table* kv_store, char* key, struct Value* value) {
     new_node->value = value; // do i need copy value?
     new_node->next = NULL;
 
-    if(kv_store->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
-        kv_store->buckets[hash] = new_node;
+    if((*kv_store)->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
+        (*kv_store)->buckets[hash] = new_node;
     }
     else { 
-        struct node* tail = kv_store->buckets[hash];
+        struct node* tail = (*kv_store)->buckets[hash];
         while(tail->next != NULL) {
             tail = tail->next;
         }
         tail->next = new_node;
     }
 
-    kv_store->size+=1;
+    (*kv_store)->size+=1;
     return; 
 }
 

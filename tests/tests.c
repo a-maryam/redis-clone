@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+const int default_size = 16; // should this be a macro?
+
 // rewrite tests to have size arg in create table call
 
 // write string generator for short strings 
@@ -37,7 +39,7 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
 /* tests insert and get - insert is always going to depend on a get or exists */ 
 bool test_kv_insert_and_get_value() {
     /* should make this const but I know my function does not modify.*/
-    struct hash_table* kv = create_table();
+    struct hash_table* kv = create_table(default_size);
     char* test_key = "TEST_KEY";
     char* test_val = "TEST_VALUE";
     struct Value* str_value = create_string_value(test_val);
@@ -61,7 +63,7 @@ bool test_kv_insert_and_get_value() {
 // create hash collisions
 bool test_kv_insert_collision() {
     // "ab" "ba"
-    struct hash_table* kv = create_table();
+    struct hash_table* kv = create_table(default_size);
 
     char key1[] = "ab";
     char key2[] = "ba";
@@ -94,7 +96,7 @@ bool test_kv_insert_collision() {
 
 /* Testing get independently of insert */
 bool test_kv_get_value_when_empty() {
-    struct hash_table* kv = create_table();
+    struct hash_table* kv = create_table(default_size);
     char key[] = "DNE";
     bool res = get_value(kv, key) == NULL;
     free_hash_table(kv);
@@ -103,7 +105,7 @@ bool test_kv_get_value_when_empty() {
 }
 
 bool test_delete() {
-    struct hash_table* kv = create_table();
+    struct hash_table* kv = create_table(default_size);
 
     char key[] = "ABC";
     char value[] = "123";
