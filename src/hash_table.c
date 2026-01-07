@@ -26,7 +26,6 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
 void resize_table(struct hash_table** kv) {
     struct hash_table* old_kv = *kv;
     struct hash_table* new_kv = create_table(old_kv->cap * 2);
-    new_kv->size = old_kv->size;
     copy_table(old_kv, new_kv);
     free_hash_table(old_kv); 
     *kv = new_kv;

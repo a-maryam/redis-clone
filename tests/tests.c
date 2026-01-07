@@ -43,7 +43,7 @@ bool test_kv_insert_and_get_value() {
     char* test_key = "TEST_KEY";
     char* test_val = "TEST_VALUE";
     struct Value* str_value = create_string_value(test_val);
-    insert(kv, test_key, str_value);
+    insert(&kv, test_key, str_value);
 
     // is the value in the hashtable what we want it to be for the key?
     int result = strcmp((char*)get_value(kv, test_key)->data, test_val); // strcmp equality is 0
@@ -73,8 +73,8 @@ bool test_kv_insert_collision() {
     struct Value* v1 = create_string_value(value1);
     struct Value* v2 = create_string_value(value2);
 
-    insert(kv, key1, v1);
-    insert(kv, key2, v2);
+    insert(&kv, key1, v1);
+    insert(&kv, key2, v2);
 
     char* res1 = (char*) get_value(kv, key1)->data;
     char* res2 = (char*) get_value(kv, key2)->data;
@@ -111,7 +111,7 @@ bool test_delete() {
     char value[] = "123";
     struct Value* v1 = create_string_value(value);
 
-    insert(kv, key, v1);
+    insert(&kv, key, v1);
     delete_node(kv, key);
 
     bool res = get_value(kv, key) == NULL;
