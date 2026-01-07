@@ -7,17 +7,16 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - In-memory key-value store: 
     - hash table implemented using separate chaining (simple hash function), handles collisions
     - dynamically resizes 
-    - Safe deletion for linkedlist buckets in table
+    - safe deletion for linkedlist buckets in table
 - Wrote a value abstraction that can support different data: currently only implemented functions for strings, but it is easily extensible 
     - keys stored as heap-allocated strings
     - hashes are created from the strings
 - Interactive command loop supporting SET/GET/DEL
-- Tests started
-    - tests for validating core data structures started
+- Tests written for core command functions and collisions
 
 ## Process
 - Debugged invalid memory access and memory leaks with Valgirind
-- Wrote all functions just to support strings at first, and then adjusted for Value abstraction. Ultimately, the hashtable functions only needed minor adjustments to support the abstraction.
+- Wrote all functions just to support strings at first, and then adjusted for Value abstraction. Ultimately, the hashtable functions only needed minor adjustments to support the abstraction
 
 ## Design 
 - Using C because that's what Redis is written in, and to recall lower level topics such as memory management. 
