@@ -138,6 +138,7 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     return; 
 }
 
+// can probably rewrite this to take hash_table* or can add a param to regular insert and remove this
 void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value) { 
     if(!kv_store || !key || !value) {
         value->destroy(value);
@@ -195,6 +196,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
    
     struct node* curr = kv_store->buckets[hash];
 
+    // memory used here must have been freed.
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
             printf("printing string value:%s\n",(char*)(curr->value->data)); // write print function
@@ -226,6 +228,8 @@ void free_hash_table(struct hash_table* kv_store) {
 }
 
 void delete_node(struct hash_table* kv_store, char* key) { 
+    // decrement size
+    // make sure size stays the same if not found
     if(kv_store == NULL || key == NULL) {
         return;
     }
@@ -252,11 +256,12 @@ void delete_node(struct hash_table* kv_store, char* key) {
         }
         else { // head case
             kv_store->buckets[hash] = curr->next;
-            free(curr->key);
+            free(curr->key); // going to have to malloc even in tests.
             curr->value->destroy(curr->value);
             free(curr);
             curr=NULL;
         }
+        kv_store->size-=1;
     } 
     else {
         printf("%s", "Entered key is not in key value store.\n");

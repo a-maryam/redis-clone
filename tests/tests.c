@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <assert.h>
 
 const int default_size = 16; // should this be a macro?
 
@@ -151,6 +152,34 @@ bool resize_and_collision_test() {
     return result && result2;
 }
 
+// going to have to adjust test suite for different types
+bool reinsert_deleted_key() {
+    struct hash_table* kv = create_table(default_size);
+
+    char key[] = "key";
+    char value[]="value";
+    struct Value* new_val = create_string_value(value);
+
+    insert(&kv, key, new_val);
+
+    bool res0 = kv->size == 1;
+
+    delete_node(kv, key); 
+
+    struct Value* new_val2 = create_string_value(value);
+
+    insert(&kv, key, new_val2);
+
+    bool res1 = (strcmp((char*)get_value(kv, key)->data, value) == 0);
+    bool res2 = kv->size == 1;
+
+    free_hash_table(kv);
+
+    return res0 && res1 && res2;
+}
+
+// random string generator?
+
 // test that calloc is initing kvstore 
 
 // tests with more values, tempt more collisions
@@ -158,7 +187,7 @@ bool resize_and_collision_test() {
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
-    int total_tests = 5;
+    int total_tests = 6;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
@@ -166,9 +195,14 @@ int main(void) {
     tests_passed+= (int) test_kv_get_value_when_empty();
     tests_passed+= (int) test_delete();
     tests_passed+= (int) resize_and_collision_test();
+    tests_passed+= (int) reinsert_deleted_key();
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
     printf("%d tests failed\n", total_tests-tests_passed);
     return 0;
 }
 
+// Insert many, delete all, destroy table
+// Resize, delete keys, resize again
+// Edge case tests
+// Invariant tests

@@ -15,7 +15,7 @@ struct Value* create_string_value(char* s) { // will be called based on command 
     struct Value* res = malloc(sizeof(*res));
     if(!res) return NULL;
     res->type = VALUE_STRING;
-    res->data = strdup(s);
+    res->data = strdup(s); // get clear on ownership
     if(!res->data) return NULL;
     res->size = strlen(s);
     // function pointers
