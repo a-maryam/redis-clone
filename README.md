@@ -23,10 +23,12 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Chaining for hashtable collisions: simple for now
 
 ## Usage
-`SSET key value`<br>  
-`SGET key`<br>
-`> value`<br>
-`SDEL key`
+```
+SSET key value
+SGET key
+> value
+SDEL key
+```
 
 - S in the commands above is for string value commands
 
