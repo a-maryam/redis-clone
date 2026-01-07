@@ -24,6 +24,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key);
 void delete_node(struct hash_table* kv_store, char* key);  // probably make it return void. 
 bool node_exists(struct hash_table* kv_store, char* key);
 struct node* get_node(struct hash_table* kv_store, char* key);
+void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value);
 
 void copy_node(struct node* old_n, struct node* new_n);
 void resize_table(struct hash_table** kv);

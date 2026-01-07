@@ -26,6 +26,7 @@ static uint64_t bucket_index(const uint64_t hash, int size) {
 void resize_table(struct hash_table** kv) {
     struct hash_table* old_kv = *kv;
     struct hash_table* new_kv = create_table(old_kv->cap * 2);
+    if(!new_kv) return;
     copy_table(old_kv, new_kv);
     free_hash_table(old_kv); 
     *kv = new_kv;
@@ -38,7 +39,7 @@ void copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
 
         while(old_curr!=NULL) {
             struct Value* new_val = old_curr->value->copy(old_curr->value);
-            insert(&new_kv, old_curr->key, new_val); // insert owns key: key strdup there
+            insert_no_resize(&new_kv, old_curr->key, new_val); // insert owns key: key strdup there
             old_curr = old_curr->next;
         }
     }
@@ -81,7 +82,7 @@ struct hash_table* create_table(int capacity) {
 }
 
 // i feel like this may be bad design but since we keep looping after command failures it seems necessary
-/* insert takes ownership for value in the case it fails to be inserted - otherwise it is freed when (owned by hashtable) hashtable is */
+/* insert takes ownership for value - then when in table owned by table */
 void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
     if(!kv_store || !key || !value) {
         value->destroy(value);
@@ -113,10 +114,56 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     }
     new_node->key = strdup(key);
     
-
     if(new_node->key==NULL) {
-        free(new_node->key);
-        new_node->value->destroy(new_node->value);
+        value->destroy(value);
+        free(new_node);
+        return;
+    }
+
+    new_node->value = value; // do i need copy value?
+    new_node->next = NULL;
+
+    if((*kv_store)->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
+        (*kv_store)->buckets[hash] = new_node;
+    }
+    else { 
+        struct node* tail = (*kv_store)->buckets[hash];
+        while(tail->next != NULL) {
+            tail = tail->next;
+        }
+        tail->next = new_node;
+    }
+
+    (*kv_store)->size+=1;
+    return; 
+}
+
+void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value) { 
+    if(!kv_store || !key || !value) {
+        value->destroy(value);
+        return;
+    }
+
+    // check for duplicate keys. 
+    struct node* n = get_node(*kv_store, key);
+    if (n) {
+        n->value->destroy(n->value);
+        n->value = value;
+        return;
+    }
+
+    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), (*kv_store)->cap);
+    struct node* new_node = malloc(sizeof(*new_node));
+    
+    if(new_node == NULL) {
+        value->destroy(value); 
+        printf("New node in insert failed allocation."); // logging ?
+        return;
+    }
+    new_node->key = strdup(key);
+    
+    if(new_node->key==NULL) {
+        value->destroy(value);
         free(new_node);
         return;
     }
@@ -158,6 +205,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
     return NULL;
     
 }
+
 
 void free_hash_table(struct hash_table* kv_store) {
     if(kv_store == NULL) return;

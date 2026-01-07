@@ -121,6 +121,36 @@ bool test_delete() {
     return res;
 }
 
+bool resize_and_collision_test() {
+    struct hash_table* kv = create_table(default_size);
+
+    char key1[] = "ab";
+    char key2[] = "ba";
+    char value1[] = "1";
+    char value2[] = "2";
+
+    struct Value* v1 = create_string_value(value1);
+    struct Value* v2 = create_string_value(value2);
+
+    insert(&kv, key1, v1);
+    insert(&kv, key2, v2);
+
+    char* res1 = (char*) get_value(kv, key1)->data;
+    char* res2 = (char*) get_value(kv, key2)->data;
+    // checking if both args have been inserted and that they exist in different memory.
+    bool result = res1!=NULL && res2!=NULL && res1!=res2;
+
+    resize_table(&kv);
+
+    char* new_res1 = (char*) get_value(kv, key1)->data;
+    char* new_res2 = (char*) get_value(kv, key2)->data;
+    bool result2 = new_res1!=NULL && new_res2!=NULL && new_res1!=new_res2;
+
+    free_hash_table(kv);
+
+    return result && result2;
+}
+
 // test that calloc is initing kvstore 
 
 // tests with more values, tempt more collisions
@@ -128,13 +158,14 @@ bool test_delete() {
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
-    int total_tests = 4;
+    int total_tests = 5;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
     tests_passed+= (int) test_kv_insert_collision();
     tests_passed+= (int) test_kv_get_value_when_empty();
     tests_passed+= (int) test_delete();
+    tests_passed+= (int) resize_and_collision_test();
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
     printf("%d tests failed\n", total_tests-tests_passed);
