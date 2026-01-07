@@ -60,7 +60,7 @@ bool test_kv_insert_and_get_value() {
     return result == 0;
 }
 
-// create hash collisions
+// create hash collisions in unresized table 
 bool test_kv_insert_collision() {
     // "ab" "ba"
     struct hash_table* kv = create_table(default_size);

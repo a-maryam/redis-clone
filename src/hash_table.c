@@ -96,7 +96,7 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
         return;
     }
     double load_factor = 0.75;
-    load_factor = 0.0; // test
+    //load_factor = 0.0; // test
 
     // check load factor
     if((double)(*kv_store)->size / (*kv_store)->cap >= load_factor) {
