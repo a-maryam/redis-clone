@@ -202,7 +202,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
     // memory used here must have been freed.
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            //printf("printing string value:%s\n",(char*)(curr->value->data)); // write print function
+            printf("%s\n",(char*)(curr->value->data)); // write print function
             return curr->value;
         }
         curr = curr->next;

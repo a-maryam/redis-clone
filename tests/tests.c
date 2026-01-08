@@ -146,7 +146,6 @@ bool resize_and_collision_test() {
     return result && result2;
 }
 
-// going to have to adjust test suite for different types
 bool reinsert_deleted_key() {
     struct hash_table* kv = create_table(default_size);
 
@@ -159,17 +158,18 @@ bool reinsert_deleted_key() {
     bool res0 = kv->size == 1;
 
     delete_node(kv, key); 
+    bool res1 = kv->size == 0;
 
     struct Value* new_val2 = create_string_value(value);
 
     insert(&kv, key, new_val2);
 
-    bool res1 = (strcmp((char*)get_value(kv, key)->data, value) == 0);
-    bool res2 = kv->size == 1;
+    bool res2 = (strcmp((char*)get_value(kv, key)->data, value) == 0);
+    bool res3 = kv->size == 1;
 
     free_hash_table(kv);
 
-    return res0 && res1 && res2;
+    return res0 && res1 && res2 && res3;
 }
 
 // caller must free
@@ -191,8 +191,6 @@ char* generate_random_string(int len) {
 
 bool insert_many_delete_all_destroy_table() {
     struct hash_table* kv = create_table(default_size);
-    // can create linkedlist of nodes and then insert
-    // insert key, value
     int len_keys = 14;
     int len_values = 14;
     int num_to_insert = 3000;
@@ -229,6 +227,25 @@ bool insert_many_delete_all_destroy_table() {
     return res0 && res1;
 }
 
+bool insert_same_key() {
+    struct hash_table* kv = create_table(default_size);
+    int len = 10;
+    char* key = generate_random_string(len);
+    char* value = generate_random_string(len); // doesn't particularly matter but we'll insert same value too
+
+    struct Value* new_val = create_string_value(value);
+    insert(&kv, key, new_val);
+    bool res0 = kv->size == 1;
+    struct Value* new_val1 = create_string_value(value);
+    insert(&kv, key, new_val1);
+    bool res1 = kv->size == 1;
+    
+    free_hash_table(kv);
+    free(key);
+    free(value);
+    return res0 && res1;
+}
+
 // test that calloc is initing kvstore 
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
@@ -236,7 +253,7 @@ int main(void) {
     // should be called once early on -- otherwise nonrandomness happens
     srand(time(NULL));
 
-    int total_tests = 7;
+    int total_tests = 8;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
@@ -246,6 +263,7 @@ int main(void) {
     tests_passed+= (int) resize_and_collision_test();
     tests_passed+= (int) reinsert_deleted_key();
     tests_passed+= (int) insert_many_delete_all_destroy_table();
+    tests_passed+= (int) insert_same_key();
 
     //printf("generated string: %s\n", generate_random_string(13));
 
