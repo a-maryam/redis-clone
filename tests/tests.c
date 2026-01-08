@@ -12,9 +12,6 @@
 
 const int default_size = 16; // should this be a macro?
 
-// loop to create a bunch of Values and insert into table
-// test load factor
-
 // create new argument structs more easily.
 // caller will own memory allocated here. must free.
 static struct Arguments* create_new_arguments(char* key1, char* value1, enum Command cmd1) { // string 
@@ -182,7 +179,6 @@ char* generate_random_string(int len) {
     if(random_string == NULL) return NULL;
     char buffer[len+1];
     buffer[len] = '\0';
-    srand(time(NULL));
     int lower = 32;
     int upper = 122;
     for(int i = 0; i < len; i++) {
@@ -195,9 +191,37 @@ char* generate_random_string(int len) {
 
 bool insert_many_delete_all_destroy_table() {
     struct hash_table* kv = create_table(default_size);
+    // can create linkedlist of nodes and then insert
+    // insert key, value
+    int len_keys = 3;
+    int len_values = 3;
+    int num_to_insert = 3000;
+
+    // +1 for termination
+    char** keys = malloc(num_to_insert*sizeof(char*));
+    struct Value** vals = calloc(num_to_insert, sizeof(struct Value*));
+    for(int i = 0; i < num_to_insert; i++) {
+        char* temp = generate_random_string(len_values+1);
+        //printf("key: %s\n", temp);
+        vals[i] = create_string_value(temp);
+        keys[i] = generate_random_string(len_keys+1);
+        free(temp); // create value mallocs/strdups its own string
+    }
+
+    for(int i = 0; i < num_to_insert; i++) {
+        insert(&kv, keys[i], vals[i]);
+    }
+    bool res0 = kv->size == num_to_insert;
+    //printf("size of kv: %d\n", kv->size);
+
+    for(int i = 0 ; i < num_to_insert; i++) {
+        free(keys[i]);
+    }
+    free(keys);
+    free(vals);
 
     free_hash_table(kv);
-    return true;//temporary
+    return res0;
 }
 
 // random string generator?
@@ -206,7 +230,10 @@ bool insert_many_delete_all_destroy_table() {
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
-    int total_tests = 6;
+    // should be called once early on -- otherwise nonrandomness happens
+    srand(time(NULL));
+
+    int total_tests = 7;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
@@ -215,6 +242,7 @@ int main(void) {
     tests_passed+= (int) test_delete();
     tests_passed+= (int) resize_and_collision_test();
     tests_passed+= (int) reinsert_deleted_key();
+    tests_passed+= (int) insert_many_delete_all_destroy_table();
 
     //printf("generated string: %s\n", generate_random_string(13));
 

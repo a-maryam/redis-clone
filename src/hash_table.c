@@ -84,6 +84,7 @@ struct hash_table* create_table(int capacity) {
 // i feel like this may be bad design but since we keep looping after command failures it seems necessary
 /* insert takes ownership for value - then when in table owned by table */
 void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
+    bool test = true;
     if(!kv_store || !key || !value) {
         value->destroy(value);
         return;
@@ -94,6 +95,9 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     if (n) {
         n->value->destroy(n->value);
         n->value = value;
+        printf("%s\n", "duplicate");
+        // overwrite should not increment
+        //(*kv_store)->size = (*kv_store)->size + 1;
         return;
     }
     double load_factor = 0.75;
@@ -109,7 +113,8 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     
     if(new_node == NULL) {
         value->destroy(value); 
-        printf("New node in insert failed allocation."); // logging ?
+        if(test) printf("New node in insert failed allocation."); // logging ?
+        if(test) printf("%s\n", "early return in insert. new node allocated null");
         return;
     }
     new_node->key = strdup(key);
@@ -133,8 +138,8 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
         }
         tail->next = new_node;
     }
-
-    (*kv_store)->size+=1;
+   
+    (*kv_store)->size = (*kv_store)->size + 1;
     return; 
 }
 
@@ -147,7 +152,7 @@ void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* val
 
     // check for duplicate keys. 
     struct node* n = get_node(*kv_store, key);
-    if (n) {
+    if (n!=NULL) {
         n->value->destroy(n->value);
         n->value = value;
         return;
@@ -183,7 +188,7 @@ void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* val
         tail->next = new_node;
     }
 
-    (*kv_store)->size+=1;
+    (*kv_store)->size = (*kv_store)->size + 1;
     return; 
 }
 
@@ -199,7 +204,7 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
     // memory used here must have been freed.
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf("printing string value:%s\n",(char*)(curr->value->data)); // write print function
+            //printf("printing string value:%s\n",(char*)(curr->value->data)); // write print function
             return curr->value;
         }
         curr = curr->next;
