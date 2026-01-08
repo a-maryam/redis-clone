@@ -5,10 +5,6 @@
 #include "../include/hash_table.h"
 #include <stdlib.h>
 
-// get command 
-// create values
-// insert into buckets
-
 //Value* create_int_value(int x) { TODO }
 
 struct Value* create_string_value(char* s) { // will be called based on command from user / cannot infer user-entered types

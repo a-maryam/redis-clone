@@ -8,14 +8,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-//#include <assert.h>
 #include <time.h>
 
 const int default_size = 16; // should this be a macro?
 
-// rewrite tests to have size arg in create table call
-
-// write string generator for short strings 
 // loop to create a bunch of Values and insert into table
 // test load factor
 
@@ -201,6 +197,7 @@ bool insert_many_delete_all_destroy_table() {
     struct hash_table* kv = create_table(default_size);
 
     free_hash_table(kv);
+    return true;//temporary
 }
 
 // random string generator?
