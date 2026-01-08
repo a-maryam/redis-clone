@@ -8,7 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <assert.h>
+//#include <assert.h>
+#include <time.h>
 
 const int default_size = 16; // should this be a macro?
 
@@ -178,12 +179,33 @@ bool reinsert_deleted_key() {
     return res0 && res1 && res2;
 }
 
+// caller must free
+char* generate_random_string(int len) {
+    // want random numbers from 32-122 (includes some symbols)
+    char* random_string = malloc((len+1)*sizeof(char));
+    if(random_string == NULL) return NULL;
+    char buffer[len+1];
+    buffer[len] = '\0';
+    srand(time(NULL));
+    int lower = 32;
+    int upper = 122;
+    for(int i = 0; i < len; i++) {
+        buffer[i] = (char) ((rand() % (upper - lower +1)) + lower);
+    }
+    strcpy(random_string, buffer);
+    return random_string;
+}
+
+
+bool insert_many_delete_all_destroy_table() {
+    struct hash_table* kv = create_table(default_size);
+
+    free_hash_table(kv);
+}
+
 // random string generator?
-
 // test that calloc is initing kvstore 
-
 // tests with more values, tempt more collisions
-
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
@@ -196,6 +218,8 @@ int main(void) {
     tests_passed+= (int) test_delete();
     tests_passed+= (int) resize_and_collision_test();
     tests_passed+= (int) reinsert_deleted_key();
+
+    //printf("generated string: %s\n", generate_random_string(13));
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
     printf("%d tests failed\n", total_tests-tests_passed);
