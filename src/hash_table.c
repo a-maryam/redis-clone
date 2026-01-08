@@ -96,8 +96,6 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
         n->value->destroy(n->value);
         n->value = value;
         printf("%s\n", "duplicate");
-        // overwrite should not increment
-        //(*kv_store)->size = (*kv_store)->size + 1;
         return;
     }
     double load_factor = 0.75;

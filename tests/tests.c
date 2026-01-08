@@ -193,8 +193,8 @@ bool insert_many_delete_all_destroy_table() {
     struct hash_table* kv = create_table(default_size);
     // can create linkedlist of nodes and then insert
     // insert key, value
-    int len_keys = 3;
-    int len_values = 3;
+    int len_keys = 14;
+    int len_values = 14;
     int num_to_insert = 3000;
 
     // +1 for termination
@@ -212,21 +212,24 @@ bool insert_many_delete_all_destroy_table() {
         insert(&kv, keys[i], vals[i]);
     }
     bool res0 = kv->size == num_to_insert;
-    //printf("size of kv: %d\n", kv->size);
 
+    for(int i = 0; i < num_to_insert; i++) {
+        delete_node(kv, keys[i]);
+    }
+    bool res1 = kv->size == 0;
+
+    // destroy
     for(int i = 0 ; i < num_to_insert; i++) {
         free(keys[i]);
     }
     free(keys);
     free(vals);
-
     free_hash_table(kv);
-    return res0;
+
+    return res0 && res1;
 }
 
-// random string generator?
 // test that calloc is initing kvstore 
-// tests with more values, tempt more collisions
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
