@@ -95,11 +95,11 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     if (n) {
         n->value->destroy(n->value);
         n->value = value;
-        printf("%s\n", "duplicate");
+        //printf("%s\n", "duplicate");
         return;
     }
+
     double load_factor = 0.75;
-    //load_factor = 0.0; // test
 
     // check load factor
     if((double)(*kv_store)->size / (*kv_store)->cap >= load_factor) {
@@ -172,7 +172,7 @@ void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* val
         return;
     }
 
-    new_node->value = value; // do i need copy value?
+    new_node->value = value;
     new_node->next = NULL;
 
     if((*kv_store)->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.

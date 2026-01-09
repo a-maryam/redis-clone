@@ -18,7 +18,8 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Triggered invalid reads in Valgrind by traversing linked list incorrectly, assumed a node existed when it didn't, used freed memory
 - Copied buckets directly into new table in resize when they were supposed to be rehashed  
 - Revising the difference between ** and * - needed ** to resize my table
-- Sometimes had a lack of clarity about memory ownership rules
+- Early on, had a lack of clarity about memory ownership rules
+- When resizing we reinsert the new values, and at first I wrote it so that it was possible to trigger a resize in the middle of a resize which would have been bad. 
 
 ## Process
 - Debugged invalid memory access and memory leaks with Valgirind

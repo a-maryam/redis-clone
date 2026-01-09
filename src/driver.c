@@ -10,6 +10,9 @@
 #include <string.h>
 #include <unistd.h>
 
+/* Program Flow */
+/* main (driver) -> input -> args -> switchcase -> *create value if needed* -> call hashtable commands */ 
+
 volatile sig_atomic_t exit_flag = 0;
 
 // print statements here have potential to cause deadlocks. 

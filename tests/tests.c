@@ -28,8 +28,6 @@ static struct Arguments* create_new_arguments(char* key1, char* value1, enum Com
     return arg;
 }
 
-// main (driver) -> input -> args -> switchcase -> *create value if needed* -> call hashtable commands
-
 /* hash table tests */
 
 /* tests insert and get - insert is always going to depend on a get or exists */ 
@@ -253,7 +251,7 @@ bool insert_many_delete_all_reinsert_destroy_table() {
     struct hash_table* kv = create_table(default_size);
     int len_keys = 14;
     int len_values = 14;
-    int num_to_insert = 3 * default_size / 4; // 
+    int num_to_insert = (int) (load_factor * default_size) + 1; 
 
     // +1 for termination
     char** keys = malloc(num_to_insert*sizeof(char*));
@@ -275,18 +273,41 @@ bool insert_many_delete_all_reinsert_destroy_table() {
         delete_node(kv, keys[i]);
     }
     bool res2 = kv->size == 0;
-
-    // destroy
+    // destroy first round of insert mallocs
     for(int i = 0 ; i < num_to_insert; i++) {
         free(keys[i]);
     }
-
-
     free(keys);
-    free(vals);
+    free(vals); // destroy ends. 
+
+    int num_to_insert2 = (int) (load_factor * kv->cap) + 1;
+    char** keys2 = malloc(num_to_insert2*sizeof(char*)); // could make this a function
+    struct Value** vals2 = calloc(num_to_insert2, sizeof(struct Value*));
+
+
+    for(int i = 0; i < num_to_insert2; i++) {
+        char* temp = generate_random_string(len_values+1);
+        vals2[i] = create_string_value(temp);
+        keys2[i] = generate_random_string(len_keys+1);
+        free(temp);
+    }
+
+    // force resize again
+    for(int i = 0; i < num_to_insert2; i++) {
+        insert(&kv, keys2[i], vals2[i]);
+    }
+
+    bool res3 = kv->size == num_to_insert2;
+
+    for(int i = 0 ; i < num_to_insert2; i++) {
+        free(keys2[i]);
+    }
+    free(keys2);
+    free(vals2);
+
     free_hash_table(kv);
 
-    return res0 && res1;
+    return res0 && res1 && res2 && res3;
 }
 
 // test that calloc is initing kvstore 
@@ -296,7 +317,7 @@ int main(void) {
     // should be called once in main -- otherwise nonrandomness happens
     srand(time(NULL));
 
-    int total_tests = 8;
+    int total_tests = 9;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
@@ -307,6 +328,7 @@ int main(void) {
     tests_passed+= (int) reinsert_deleted_key();
     tests_passed+= (int) insert_many_delete_all_destroy_table();
     tests_passed+= (int) insert_same_key();
+    tests_passed+= (int) insert_many_delete_all_reinsert_destroy_table();
 
     //printf("generated string: %s\n", generate_random_string(13));
 
@@ -315,6 +337,5 @@ int main(void) {
     return 0;
 }
 
-// Resize, delete keys, resize again
 // Edge case tests
 // Invariant tests
