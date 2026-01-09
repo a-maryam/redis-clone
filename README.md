@@ -14,6 +14,12 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Interactive command loop supporting SET/GET/DEL
 - Tests written for core command functions and collisions
 
+## Bugs / Pitfalls
+- Triggered invalid reads in Valgrind by traversing linked list incorrectly, assumed a node existed when it didn't, used freed memory
+- Copied buckets directly into new table in resize when they were supposed to be rehashed  
+- Revising the difference between ** and * - needed ** to resize my table
+- Sometimes had a lack of clarity about memory ownership rules
+
 ## Process
 - Debugged invalid memory access and memory leaks with Valgirind
 - Wrote all functions just to support strings at first, and then adjusted for Value abstraction. Ultimately, the hashtable functions only needed minor adjustments to support the abstraction
@@ -32,8 +38,9 @@ SDEL key
 
 - S in the commands above is for string value commands
 
-## Planned 
+## Planned (Temporarily postponed)
 - RESP-like protocol parsing
 - Single client TCP server
 - Persistence: snapshot based
 - Continually expanding test suite
+- Hashtable shrink

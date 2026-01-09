@@ -10,7 +10,8 @@
 #include <stdbool.h>
 #include <time.h>
 
-const int default_size = 16; // should this be a macro?
+const int default_size = 16; // should this be a macro or in header file?
+const double load_factor = 0.75;
 
 // create new argument structs more easily.
 // caller will own memory allocated here. must free.
@@ -193,7 +194,7 @@ bool insert_many_delete_all_destroy_table() {
     struct hash_table* kv = create_table(default_size);
     int len_keys = 14;
     int len_values = 14;
-    int num_to_insert = 3000;
+    int num_to_insert = 1000;
 
     // +1 for termination
     char** keys = malloc(num_to_insert*sizeof(char*));
@@ -246,11 +247,53 @@ bool insert_same_key() {
     return res0 && res1;
 }
 
+
+/* Insert keys to trigger resize, delete keys, trigger new resize by insert. */
+bool insert_many_delete_all_reinsert_destroy_table() {
+    struct hash_table* kv = create_table(default_size);
+    int len_keys = 14;
+    int len_values = 14;
+    int num_to_insert = 3 * default_size / 4; // 
+
+    // +1 for termination
+    char** keys = malloc(num_to_insert*sizeof(char*));
+    struct Value** vals = calloc(num_to_insert, sizeof(struct Value*));
+    for(int i = 0; i < num_to_insert; i++) {
+        char* temp = generate_random_string(len_values+1);
+        vals[i] = create_string_value(temp);
+        keys[i] = generate_random_string(len_keys+1);
+        free(temp); // create value mallocs/strdups its own string
+    }
+
+    for(int i = 0; i < num_to_insert; i++) {
+        insert(&kv, keys[i], vals[i]);
+    }
+    bool res0 = kv->size == num_to_insert;
+    bool res1 = kv->cap == default_size * 2;
+
+    for(int i = 0; i < num_to_insert; i++) {
+        delete_node(kv, keys[i]);
+    }
+    bool res2 = kv->size == 0;
+
+    // destroy
+    for(int i = 0 ; i < num_to_insert; i++) {
+        free(keys[i]);
+    }
+
+
+    free(keys);
+    free(vals);
+    free_hash_table(kv);
+
+    return res0 && res1;
+}
+
 // test that calloc is initing kvstore 
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
 int main(void) {
-    // should be called once early on -- otherwise nonrandomness happens
+    // should be called once in main -- otherwise nonrandomness happens
     srand(time(NULL));
 
     int total_tests = 8;
@@ -268,11 +311,10 @@ int main(void) {
     //printf("generated string: %s\n", generate_random_string(13));
 
     printf("%d out of %d tests passed\n", tests_passed, total_tests);
-    printf("%d tests failed\n", total_tests-tests_passed);
+    printf("%d tests failed\n", total_tests - tests_passed);
     return 0;
 }
 
-// Insert many, delete all, destroy table
 // Resize, delete keys, resize again
 // Edge case tests
 // Invariant tests

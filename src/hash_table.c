@@ -123,7 +123,7 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
         return;
     }
 
-    new_node->value = value; // do i need copy value?
+    new_node->value = value; 
     new_node->next = NULL;
 
     if((*kv_store)->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
