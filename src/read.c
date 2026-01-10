@@ -1,8 +1,8 @@
 // read.c
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/read.h"
 #include <string.h>
+#include "../include/read.h"
 
 /* read does NOT own line */
 char* read_input() {

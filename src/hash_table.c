@@ -1,11 +1,12 @@
 // hash_table.c
-#include "../include/hash_table.h"
-#include "../include/struct.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "../include/hash_table.h"
+#include "../include/struct.h"
 
 // djb2 non-cryptographic hash
 static uint64_t hash_function(const unsigned char* str) { // high bit set characters can become negative. 
@@ -199,10 +200,9 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
    
     struct node* curr = kv_store->buckets[hash];
 
-    // memory used here must have been freed.
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf("%s\n",(char*)(curr->value->data)); // write print function
+            printf("%s\n",(char*)(curr->value->data)); 
             return curr->value;
         }
         curr = curr->next;
@@ -210,7 +210,6 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
     return NULL;
     
 }
-
 
 void free_hash_table(struct hash_table* kv_store) {
     if(kv_store == NULL) return;
@@ -274,7 +273,7 @@ void delete_node(struct hash_table* kv_store, char* key) {
 }
 
 bool node_exists(struct hash_table* kv_store, char* key) {
-    return false;
+    return get_node(kv_store, key) != NULL;
 }
 
 struct node* get_node(struct hash_table* kv_store, char* key) {

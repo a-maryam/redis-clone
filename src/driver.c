@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+//#include "../include/commands.h"
 
 /* Program Flow */
 /* main (driver) -> input -> args -> switchcase -> *create value if needed* -> call hashtable commands */ 

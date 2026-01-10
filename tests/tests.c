@@ -310,6 +310,21 @@ bool insert_many_delete_all_reinsert_destroy_table() {
     return res0 && res1 && res2 && res3;
 }
 
+bool test_node_exists() {
+    /* should make this const but I know my function does not modify.*/
+    struct hash_table* kv = create_table(default_size);
+    char* test_key = "TEST_KEY";
+    char* test_val = "TEST_VALUE";
+    struct Value* str_value = create_string_value(test_val);
+
+    insert(&kv, test_key, str_value);
+    bool res = node_exists(kv, test_key);
+
+    free_hash_table(kv);
+
+    return res;
+}
+
 // test that calloc is initing kvstore 
 // implement exists (maybe too similar to get -- guess its just a boring bool func)
 
@@ -317,7 +332,7 @@ int main(void) {
     // should be called once in main -- otherwise nonrandomness happens
     srand(time(NULL));
 
-    int total_tests = 9;
+    int total_tests = 10;
     int tests_passed = 0;
     
     tests_passed+= (int) test_kv_insert_and_get_value();
@@ -329,6 +344,7 @@ int main(void) {
     tests_passed+= (int) insert_many_delete_all_destroy_table();
     tests_passed+= (int) insert_same_key();
     tests_passed+= (int) insert_many_delete_all_reinsert_destroy_table();
+    tests_passed+= (int) test_node_exists();
 
     //printf("generated string: %s\n", generate_random_string(13));
 

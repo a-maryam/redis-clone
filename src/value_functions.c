@@ -1,9 +1,10 @@
-// contain functions for different valuetyprs
+// contain functions for different valuetypes
+
+#include <string.h>
+#include <stdlib.h>
+#include "../include/hash_table.h"
 #include "../include/struct.h"
 #include "../include/value_functions.h"
-#include <string.h>
-#include "../include/hash_table.h"
-#include <stdlib.h>
 
 //Value* create_int_value(int x) { TODO }
 
