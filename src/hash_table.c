@@ -82,10 +82,10 @@ struct hash_table* create_table(int capacity) {
     return kv_store;
 }
 
-// i feel like this may be bad design but since we keep looping after command failures it seems necessary
-/* insert takes ownership for value - then when in table owned by table */
+
+// insert only frees memory on program failure and destroys duplicate nodes. 
 void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
-    bool test = true;
+    bool test = false;
     if(!kv_store || !key || !value) {
         value->destroy(value);
         return;
@@ -93,10 +93,10 @@ void insert(struct hash_table** kv_store, char* key, struct Value* value) {
 
     // check for duplicate keys. 
     struct node* n = get_node(*kv_store, key);
+
     if (n) {
         n->value->destroy(n->value);
         n->value = value;
-        //printf("%s\n", "duplicate");
         return;
     }
 
@@ -230,8 +230,6 @@ void free_hash_table(struct hash_table* kv_store) {
 }
 
 void delete_node(struct hash_table* kv_store, char* key) { 
-    // decrement size
-    // make sure size stays the same if not found
     if(kv_store == NULL || key == NULL) {
         return;
     }

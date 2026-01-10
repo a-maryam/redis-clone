@@ -1,6 +1,4 @@
-/*main.c 
-currently contains parser, main, read, token to char func
-*/
+/*parser.c*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

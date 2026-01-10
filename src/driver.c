@@ -26,6 +26,7 @@ void int_handler(int signum) {
     exit_flag = 1; 
 }
 
+/* Main owns argument struct */
 int main(void) {
     struct sigaction sa = {0};
     sa.sa_handler = int_handler; // exit on Ctrl+C
@@ -58,7 +59,7 @@ int main(void) {
         // Values inserted in hashtable, should be freed there
         switch(a1->command) {
             case STR_SET:
-                // pass ownership to insert in case of alloc failures there o/w owned by hashtable
+                // owned by hashtable unless failure makes another function responsible
                 struct Value* str_value = create_string_value(a1->value); 
                 insert(&kv_store, a1->key, str_value);
                 break;

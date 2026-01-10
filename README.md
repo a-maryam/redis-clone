@@ -25,6 +25,11 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Debugged invalid memory access and memory leaks with Valgirind
 - Wrote all functions just to support strings at first, and then adjusted for Value abstraction. Ultimately, the hashtable functions only needed minor adjustments to support the abstraction
 
+## Memory Ownership Rules 
+- Hashtable owns all inserted values, but if there is an error in any intermediary function, that function becomes responsible for releasing that memory. 
+- Argument struct is owned by driver. Freed before exit. 
+- Parser owns input and input tokens 
+
 ## Design 
 - Using C because that's what Redis is written in, and to recall lower level topics such as memory management. 
 - Chaining for hashtable collisions: simple for now
