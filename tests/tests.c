@@ -1,9 +1,10 @@
 // tests.c
 // will contain all tests for now
 #include "../include/tests.h"
-#include "../include/struct.h"
+#include "../include/value.h"
 #include "../include/hash_table.h"
 #include "../include/value_functions.h"
+#include "../include/arguments.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

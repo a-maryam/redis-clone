@@ -2,7 +2,7 @@
 
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
-#include "struct.h"
+#include "value.h"
 #include <stdbool.h>
 
 // represents key value pair

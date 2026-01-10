@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "../include/hash_table.h"
-#include "../include/struct.h"
+#include "../include/value.h"
 
 // djb2 non-cryptographic hash
 static uint64_t hash_function(const unsigned char* str) { // high bit set characters can become negative. 

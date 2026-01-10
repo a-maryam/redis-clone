@@ -20,7 +20,6 @@ char* read_input() {
     } 
     else {
         line[strcspn(line, "\n")]='\0';
-        //printf("Entered: %s\n", line); // for test purposes
     }
     return line; // seems correct
 } 

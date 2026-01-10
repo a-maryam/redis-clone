@@ -3,10 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../include/hash_table.h"
-#include "../include/struct.h"
+#include "../include/value.h"
 #include "../include/value_functions.h"
-
-//Value* create_int_value(int x) { TODO }
 
 struct Value* create_string_value(char* s) { // will be called based on command from user / cannot infer user-entered types
     struct Value* res = malloc(sizeof(*res));

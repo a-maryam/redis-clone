@@ -1,15 +1,16 @@
 /* driver.c: main of program */
 #include "../include/parser.h"
 #include "../include/read.h" 
-#include "../include/struct.h"
+#include "../include/value.h"
 #include "../include/hash_table.h"
 #include "../include/value_functions.h"
+#include "../include/commands.h"
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-//#include "../include/commands.h"
+
 
 /* Program Flow */
 /* main (driver) -> input -> args -> switchcase -> *create value if needed* -> call hashtable commands */ 

@@ -4,9 +4,9 @@ currently contains parser, main, read, token to char func
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../include/struct.h"
+#include "../include/arguments.h"
 #include "../include/parser.h"
-//#include "../include/commands.h"
+#include "../include/commands.h"
 
 // probably have to change from relative to whatever best practice is
 
