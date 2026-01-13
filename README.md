@@ -13,6 +13,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
     - hashes are created from the strings
 - Interactive command loop supporting SET/GET/DEL
 - Tests written for core command functions and collisions
+- In-progress: Server over TCP sockets, with Node.js as a client, submitting commands to the key value store
 
 ## Bugs / Pitfalls
 - Triggered invalid reads in Valgrind by traversing linked list incorrectly, assumed a node existed when it didn't, used freed memory
@@ -44,9 +45,8 @@ SDEL key
 
 - S in the commands above is for string value commands
 
-## Planned (Temporarily postponed)
+## Planned
 - RESP-like protocol parsing
-- Single client TCP server
 - Persistence: snapshot based
 - Continually expanding test suite
 - Hashtable shrink
