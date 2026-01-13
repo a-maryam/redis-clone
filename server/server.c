@@ -8,8 +8,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdlib.h>
-//#include "../include/commands.h"
-//#include "../src/hash_table.h"
+#include "../include/commands.h"
+#include "../src/hash_table.h"
 #define PORT 8000 // fun port
 //curl http://localhost:8000/
 
@@ -64,12 +64,17 @@ int main(int argc, char const* argv[]) {
     }
     int len_buffer = 1024;
     char buffer[len_buffer] = {};
-    ssize_t bytes_read = read(new_socket, buffer, len_buffer);
+    ssize_t bytes_read;
+     
 
-    printf("Received request: %s\n", buffer);
+    while((bytes_read = read(new_socket, buffer, len_buffer)) > 0) {
+        printf("Received request: %s\n", buffer);
 
+        // find commands in http request
+
+    }
     char* hello = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"; 
-    
+
     // with read will have to loop till end received
     send(new_socket, hello, strlen(hello), MSG_CONFIRM); // which flag? 
 
