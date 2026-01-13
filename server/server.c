@@ -51,10 +51,12 @@ int main(int argc, char const* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if(listen(fd, 3) < 0) {
+    if(listen(fd, 3) < 0) { // second arg = number of allowed pending connections
         perror("Listen failed\n");
          exit(EXIT_FAILURE);
     }
+
+    printf("Listening on port 8000...\n");
 
     if((new_socket = accept(fd, (struct sockaddr*)&address, &len_addr)) < 0) {
         perror("Accept failed\n");
@@ -63,7 +65,12 @@ int main(int argc, char const* argv[]) {
     int len_buffer = 1024;
     char buffer[len_buffer] = {};
     ssize_t bytes_read = read(new_socket, buffer, len_buffer);
-    char* hello = "hello socket world";
+
+    printf("Received request: %s\n", buffer);
+
+    char* hello = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"; 
+    
+    // with read will have to loop till end received
     send(new_socket, hello, strlen(hello), MSG_CONFIRM); // which flag? 
 
     // gotta loop, parse into args
