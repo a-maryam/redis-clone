@@ -47,6 +47,7 @@ int main(void) {
         }
 
         struct Arguments* a1 = parse(input);
+        
         if(a1==NULL || input == NULL) {
             free_arg_struct(a1);
             free(input);
@@ -77,9 +78,10 @@ int main(void) {
             default:
                 printf("Unusual program behavior"); // this case should never occur.
                 break; 
-    }
+        }
 
     if(a1!=NULL) free_arg_struct(a1);
+    free(input); 
 }
 
     free_hash_table(kv_store);

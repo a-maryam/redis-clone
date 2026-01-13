@@ -6,13 +6,9 @@
 #include "../include/parser.h"
 #include "../include/commands.h"
 
-// probably have to change from relative to whatever best practice is
-
-/* owns token_arr and input (from read function) */
+/* owns token_arr */
 struct Arguments* parse(char* input) {
     if(input==NULL) {
-        free(input);
-        input = NULL;
         return NULL;
     }
 
@@ -64,7 +60,6 @@ struct Arguments* parse(char* input) {
 
     // function allocated and function freed
     free(tokens_arr);
-    free(input); // read allocated, caller freed (factory pattern)
     
     return arg1; // caller must free now.
 }

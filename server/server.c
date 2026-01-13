@@ -9,9 +9,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "../include/commands.h"
-#include "../src/hash_table.h"
+#include "../include/hash_table.h"
+#include "../include/parser.h"
+#include "../include/arguments.h"
+#include "../include/value_functions.h"
 #define PORT 8000 // fun port
 //curl http://localhost:8000/
+
+const int default_size = 16; 
 
 int main(int argc, char const* argv[]) {
     // accept connections 
@@ -65,22 +70,56 @@ int main(int argc, char const* argv[]) {
     int len_buffer = 1024;
     char buffer[len_buffer] = {};
     ssize_t bytes_read;
-     
+    struct hash_table* kv_store = create_table(default_size);
 
+    // assuming full request arrives in read (later: use content-length in header)
     while((bytes_read = read(new_socket, buffer, len_buffer)) > 0) {
         printf("Received request: %s\n", buffer);
 
-        // find commands in http request
+        char* body = strstr(buffer, "\r\n\r\n");
 
+        if(!body) {
+            continue;
+        }
+        body+=4; // skip "\r\n\r\n"
+
+        struct Arguments* a1 = parse(body);
+
+        if(!a1) {
+            free(a1);
+            continue;
+        }
+
+        switch(a1->command) {
+            case STR_SET:
+                // owned by hashtable unless failure makes another function responsible
+                struct Value* str_value = create_string_value(a1->value); 
+                insert(&kv_store, a1->key, str_value);
+                break;
+            case STR_GET:
+                get_value(kv_store, a1->key);
+                break;
+            case STR_DEL:
+                delete_node(kv_store, a1->key);
+                break;
+            case KEY_EXISTS:
+                node_exists(kv_store, a1->key);
+                break;
+            case CMD_UNKNOWN:
+                printf("Unknown command.");
+                break;
+            default:
+                printf("Unusual program behavior"); // this case should never occur.
+                break; 
+        }
+        free_arg_struct(a1);
     }
+    free_hash_table(kv_store);
+    // need sighandler
     char* hello = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"; 
 
     // with read will have to loop till end received
     send(new_socket, hello, strlen(hello), MSG_CONFIRM); // which flag? 
-
-    // gotta loop, parse into args
-
-    //read http request 
 
     close(new_socket);
     close(fd);

@@ -21,6 +21,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 - Revising the difference between ** and * - needed ** to resize my table
 - Early on, had a lack of clarity about memory ownership rules
 - When resizing we reinsert the new values, and at first I wrote it so that it was possible to trigger a resize in the middle of a resize which would have been bad. 
+- Realized the memory ownership rule I set for parse caused problems when it came to implementing the TCP server - adjusted it to not take ownership of read buffer
 
 ## Process
 - Debugged invalid memory access and memory leaks with Valgirind
