@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "../include/commands.h"
 #include "../include/hash_table.h"
 #include "../include/parser.h"
@@ -18,12 +19,23 @@
 
 const int default_size = 16; 
 
+volatile sig_atomic_t exit_flag = 0;
+
+// print statements here have potential to cause deadlocks. 
+void int_handler(int signum) { 
+    const char* exit_message = "\n\nExiting KVSERVER...\n";
+    size_t nbytes = strlen(exit_message);
+    write(1, exit_message, nbytes);
+    // doesn't matter if write is successful - no checks. 
+    exit_flag = 1; 
+}
+
 int main(int argc, char const* argv[]) {
-    // accept connections 
-    // parse HTTP 
-    // translate requests
-    // format HTTP responses
-    // client = curl 
+    struct sigaction sa = {0};
+    sa.sa_handler = int_handler; // exit on Ctrl+C
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0; // default behavior of signal handling
+    sigaction(SIGINT, &sa, NULL); // register action
 
     int fd;
     int new_socket;

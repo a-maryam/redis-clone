@@ -18,7 +18,7 @@ volatile sig_atomic_t exit_flag = 0;
 
 // print statements here have potential to cause deadlocks. 
 void int_handler(int signum) { 
-    const char* exit_message = "Exiting Toy Redis...";
+    const char* exit_message = "\n\nExiting Toy Redis...\n";
     size_t nbytes = strlen(exit_message);
     write(1, exit_message, nbytes);
     // doesn't matter if write is successful - no checks. 
@@ -41,7 +41,7 @@ int main(void) {
         char* input = read_input();
 
         if(input == NULL) {
-            printf("%s\n", "Something went wrong reading your input. Try again.");
+            //printf("%s\n", "Something went wrong reading your input. Try again.");
             free(input); // back to the beginning
             continue;
         }

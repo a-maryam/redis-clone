@@ -85,6 +85,8 @@ struct hash_table* create_table(int capacity) {
 
 // insert only frees memory on program failure and destroys duplicate nodes. 
 void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
+    //testing server
+    printf("%s\n", "Insert entered.");
     bool test = false;
     if(!kv_store || !key || !value) {
         value->destroy(value);
