@@ -82,70 +82,31 @@ struct hash_table* create_table(int capacity) {
     return kv_store;
 }
 
-
+// will resize
 // insert only frees memory on program failure and destroys duplicate nodes. 
 void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
     //testing server
     printf("%s\n", "Insert entered.");
-    bool test = false;
     if(!kv_store || !key || !value) {
         value->destroy(value);
         return;
     }
 
-    // check for duplicate keys. 
-    struct node* n = get_node(*kv_store, key);
-
-    if (n) {
-        n->value->destroy(n->value);
-        n->value = value;
-        return;
-    }
-
-    double load_factor = 0.75;
-
-    // check load factor
-    if((double)(*kv_store)->size / (*kv_store)->cap >= load_factor) {
-        resize_table(kv_store);
-    }
-
-    uint64_t hash = bucket_index(hash_function((const unsigned char *)key), (*kv_store)->cap);
-    struct node* new_node = malloc(sizeof(*new_node));
-    
-    if(new_node == NULL) {
-        value->destroy(value); 
-        if(test) printf("New node in insert failed allocation."); // logging ?
-        if(test) printf("%s\n", "early return in insert. new node allocated null");
-        return;
-    }
-    new_node->key = strdup(key);
-    
-    if(new_node->key==NULL) {
-        value->destroy(value);
-        free(new_node);
-        return;
-    }
-
-    new_node->value = value; 
-    new_node->next = NULL;
-
-    if((*kv_store)->buckets[hash] == NULL) { // kv_store takes on ownership of nodes.
-        (*kv_store)->buckets[hash] = new_node;
-    }
-    else { 
-        struct node* tail = (*kv_store)->buckets[hash];
-        while(tail->next != NULL) {
-            tail = tail->next;
-        }
-        tail->next = new_node;
-    }
-   
-    (*kv_store)->size = (*kv_store)->size + 1;
-    return; 
+    insert_internal(kv_store, key, value);
 }
 
 // can probably rewrite this to take hash_table* or can add a param to regular insert and remove this
 void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value) { 
+    if(!kv_store || !key || !value) {
+        value->destroy(value);
+        return;
+    }
+
+    insert_internal(kv_store, key, value);
+}
+
+/* need to rewrite to take hash_table* only */
+void insert_internal(struct hash_table** kv_store, char* key, struct Value* value) {
     if(!kv_store || !key || !value) {
         value->destroy(value);
         return;

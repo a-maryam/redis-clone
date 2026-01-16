@@ -22,6 +22,7 @@ struct hash_table* create_table();
 
 void insert(struct hash_table** kv_store, char* key, struct Value* value);
 void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value);
+void insert_internal(struct hash_table** kv_store, char* key, struct Value* value);
 struct Value* get_value(struct hash_table* kv_store, char* key);
 
 void delete_node(struct hash_table* kv_store, char* key);   
@@ -35,5 +36,6 @@ void copy_node(struct node* old_n, struct node* new_n);
 void print_node(struct node * n);
 
 void free_hash_table(struct hash_table* kv_store);
+
 
 #endif
