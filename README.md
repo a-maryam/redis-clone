@@ -35,6 +35,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 ## Design 
 - Using C because that's what Redis is written in, and to recall lower level topics such as memory management. 
 - Chaining for hashtable collisions: simple for now
+- Made two entry points for insert: one for regular and one for resizing. I needed to avoid recursive resizing. There is one internal insert instead of using flags for code clarity
 
 ## Usage
 ```
