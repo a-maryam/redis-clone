@@ -5,8 +5,8 @@
 
 enum Command { // need more commands per data type
     STR_SET,
-    STR_GET,
-    STR_DEL,
+    GET,
+    DEL,
     KEY_EXISTS, 
     CMD_UNKNOWN
 };

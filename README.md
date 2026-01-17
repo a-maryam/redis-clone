@@ -39,10 +39,15 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 
 ## Usage
 ```
+// Set string value
 SSET key value
-SGET key
-> value
-SDEL key
+
+GET key
+
+// prints result
+value
+
+DEL key
 ```
 
 - S in the commands above is for string value commands

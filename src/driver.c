@@ -63,10 +63,10 @@ int main(void) {
                 struct Value* str_value = create_string_value(a1->value); 
                 insert(&kv_store, a1->key, str_value);
                 break;
-            case STR_GET:
+            case GET:
                 get_value(kv_store, a1->key);
                 break;
-            case STR_DEL:
+            case DEL:
                 delete_node(kv_store, a1->key);
                 break;
             case KEY_EXISTS:

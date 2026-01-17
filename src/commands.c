@@ -5,8 +5,8 @@
 // command -> enum mapping
 static struct CommandOption command_table[] = {
     {"SSET", STR_SET},
-    {"SGET", STR_GET},
-    {"SDEL", STR_DEL},
+    {"GET", GET},
+    {"DEL", DEL},
     {"EXISTS", KEY_EXISTS},
 };
 
