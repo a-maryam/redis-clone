@@ -43,14 +43,11 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 SSET key value
 
 GET key
-
 // prints result
 value
 
 DEL key
 ```
-
-- S in the commands above is for string value commands
 
 ## Planned
 - RESP-like protocol parsing
