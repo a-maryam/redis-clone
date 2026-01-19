@@ -13,7 +13,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
     - hashes are created from the strings
 - Interactive command loop supporting SET/GET/DEL
 - Tests written for core command functions and collisions
-- In-progress: Server over TCP sockets, with Node.js as a client, submitting commands to the key value store
+- In-progress: Server over TCP sockets, with Node.js as a client, submitting commands to the key value store [Postponed]
 
 ## Bugs / Pitfalls
 - Triggered invalid reads in Valgrind by traversing linked list incorrectly, assumed a node existed when it didn't, used freed memory
@@ -49,7 +49,7 @@ value
 DEL key
 ```
 
-## Planned
+## Planned [Postponed]
 - RESP-like protocol parsing
 - Persistence: snapshot based
 - Continually expanding test suite
