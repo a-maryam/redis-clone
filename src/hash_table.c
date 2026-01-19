@@ -47,20 +47,6 @@ void copy_table(struct hash_table* old_kv, struct hash_table* new_kv) {
     return;
 }
 
-void copy_node(struct node* old_n, struct node* new_n) {
-    new_n->key = strdup(old_n->key);
-    new_n->value = old_n->value->copy(old_n->value);
-    new_n->next = NULL;
-}
-
-void print_node(struct node * n) {
-    printf("------------------\n");
-    printf("Printing a node\n");
-    printf("Key: %s\n", n->key);
-    printf("Node: %s\n", (char*)n->value->data);
-    printf("------------------\n");
-}
-
 struct hash_table* create_table(int capacity) { 
     struct hash_table* kv_store = malloc(sizeof(*kv_store));
 
@@ -253,4 +239,19 @@ struct node* get_node(struct hash_table* kv_store, char* key) {
         curr = curr->next;
     }
     return NULL;
+}
+
+/* Testing purposes and unused */
+void copy_node(struct node* old_n, struct node* new_n) {
+    new_n->key = strdup(old_n->key);
+    new_n->value = old_n->value->copy(old_n->value);
+    new_n->next = NULL;
+}
+
+void print_node(struct node * n) {
+    printf("------------------\n");
+    printf("Printing a node\n");
+    printf("Key: %s\n", n->key);
+    printf("Node: %s\n", (char*)n->value->data);
+    printf("------------------\n");
 }
