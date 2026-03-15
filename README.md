@@ -6,7 +6,7 @@ I did not follow a tutorial; my toy redis is built from a simplified, conceptual
 ## Implemented Features
 - In-memory key-value store: 
     - hash table implemented using separate chaining (simple hash function), handles collisions
-    - dynamically resizes 
+    - dynamically resizes - I rehash at .75 load factor and simply double the hash table size. But, real redis uses incremental rehashing because when the resize is triggered, that operation gets a latency spike. That would be a potential upgrade.
     - safe deletion for linkedlist buckets in table
 - Wrote a value abstraction that can support different data: currently only implemented functions for strings, but it is easily extensible 
     - keys stored as heap-allocated strings
