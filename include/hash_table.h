@@ -18,7 +18,7 @@ struct hash_table {
     int size; // increment on insertion
 };
 
-struct hash_table* create_table();
+struct hash_table* create_table(int capacity);
 
 void insert(struct hash_table** kv_store, char* key, struct Value* value);
 void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value);

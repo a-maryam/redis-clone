@@ -69,22 +69,24 @@ struct hash_table* create_table(int capacity) {
 }
 
 // will resize
-// insert only frees memory on program failure and destroys duplicate nodes. 
-void insert(struct hash_table** kv_store, char* key, struct Value* value) { 
-    //testing server
-    printf("%s\n", "Insert entered.");
+// insert only frees memory on program failure and destroys duplicate nodes.
+void insert(struct hash_table** kv_store, char* key, struct Value* value) {
     if(!kv_store || !key || !value) {
-        value->destroy(value);
+        if(value) value->destroy(value);
         return;
     }
 
     insert_internal(kv_store, key, value);
+
+    if((double)(*kv_store)->size / (*kv_store)->cap > 0.75) {
+        resize_table(kv_store);
+    }
 }
 
 // can probably rewrite this to take hash_table* or can add a param to regular insert and remove this
-void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value) { 
+void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* value) {
     if(!kv_store || !key || !value) {
-        value->destroy(value);
+        if(value) value->destroy(value);
         return;
     }
 
@@ -94,7 +96,7 @@ void insert_no_resize(struct hash_table** kv_store, char* key, struct Value* val
 /* need to rewrite to take hash_table* only */
 void insert_internal(struct hash_table** kv_store, char* key, struct Value* value) {
     if(!kv_store || !key || !value) {
-        value->destroy(value);
+        if(value) value->destroy(value);
         return;
     }
 
@@ -151,7 +153,6 @@ struct Value* get_value(struct hash_table* kv_store, char* key) { //
 
     while(curr!=NULL) {
         if(strcmp(curr->key, key) == 0) {
-            printf("%s\n",(char*)(curr->value->data)); 
             return curr->value;
         }
         curr = curr->next;
