@@ -1,6 +1,7 @@
-// server.c 
-// socket programming to write http api running on local
-// interface on top of kv store
+// server.c
+// TCP key-value server. Simple line protocol:
+//   client sends:  "SSET key value\n"  or  "GET key\n"
+//   server replies: "+OK\n"  /  "+<value>\n"  /  "-nil\n"  /  "-ERR ...\n"
 
 #include <stdio.h>
 #include <string.h>
@@ -14,127 +15,110 @@
 #include "../include/parser.h"
 #include "../include/arguments.h"
 #include "../include/value_functions.h"
-#define PORT 8000 // fun port
-//curl http://localhost:8000/
 
-const int default_size = 16; 
+#define PORT     8000
+#define BUF_SIZE 1024
 
-volatile sig_atomic_t exit_flag = 0;
+static const int default_size = 16;
+static volatile sig_atomic_t exit_flag = 0;
 
-// print statements here have potential to cause deadlocks. 
-void int_handler(int signum) { 
-    const char* exit_message = "\n\nExiting KVSERVER...\n";
-    size_t nbytes = strlen(exit_message);
-    write(1, exit_message, nbytes);
-    // doesn't matter if write is successful - no checks. 
-    exit_flag = 1; 
+static void int_handler(int signum) {
+    (void)signum;
+    const char *msg = "\n\nExiting KVSERVER...\n";
+    write(1, msg, strlen(msg));
+    exit_flag = 1;
 }
 
-int main(int argc, char const* argv[]) {
-    struct sigaction sa = {0};
-    sa.sa_handler = int_handler; // exit on Ctrl+C
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0; // default behavior of signal handling
-    sigaction(SIGINT, &sa, NULL); // register action
+static void send_str(int sock, const char *msg) {
+    send(sock, msg, strlen(msg), 0);
+}
 
-    int fd;
-    int new_socket;
-    int opt = 1;
+static void handle_connection(int sock, struct hash_table **kv_store) {
+    char buf[BUF_SIZE];
+    ssize_t n;
 
-    // IPv4, TCP Protocal stream socket, 
-    if((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Socket failed.\n");
-        exit(EXIT_FAILURE);
-    }
+    while ((n = read(sock, buf, sizeof(buf) - 1)) > 0) {
+        buf[n] = '\0';
 
-    // configure socket behavior: forcing socket to bind to 
-    // address and port if in use and allows myltiple sockets
-    // to bind to the same address and port -
-    // actually may not need this behavior unless extending project
-    if(setsockopt(fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        perror("setsockopt\n");
-        exit(EXIT_FAILURE);
-    }
+        // strip trailing \r\n
+        char *end = buf + n - 1;
+        while (end >= buf && (*end == '\r' || *end == '\n'))
+            *end-- = '\0';
 
-    struct sockaddr_in address;
-    socklen_t len_addr = sizeof(address);
-    address.sin_family = AF_INET;
-    // server can accept any connections on an ip address of machine
-    address.sin_addr.s_addr = htonl(INADDR_ANY); 
-    address.sin_port = htons(PORT); // convert to network byte order
-
-    if(bind(fd, (struct sockaddr*) &address, sizeof(address)) < 0) {
-        perror("Bind failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if(listen(fd, 3) < 0) { // second arg = number of allowed pending connections
-        perror("Listen failed\n");
-         exit(EXIT_FAILURE);
-    }
-
-    printf("Listening on port 8000...\n");
-
-    if((new_socket = accept(fd, (struct sockaddr*)&address, &len_addr)) < 0) {
-        perror("Accept failed\n");
-        exit(EXIT_FAILURE);
-    }
-    int len_buffer = 1024;
-    char buffer[len_buffer] = {};
-    ssize_t bytes_read;
-    struct hash_table* kv_store = create_table(default_size);
-
-    // assuming full request arrives in read (later: use content-length in header)
-    while((bytes_read = read(new_socket, buffer, len_buffer)) > 0) {
-        printf("Received request: %s\n", buffer);
-
-        char* body = strstr(buffer, "\r\n\r\n");
-
-        if(!body) {
-            continue;
-        }
-        body+=4; // skip "\r\n\r\n"
-
-        struct Arguments* a1 = parse(body);
-
-        if(!a1) {
-            free(a1);
+        struct Arguments *args = parse(buf);
+        if (!args) {
+            send_str(sock, "-ERR parse error\n");
             continue;
         }
 
-        switch(a1->command) {
-            case STR_SET:
-                // owned by hashtable unless failure makes another function responsible
-                struct Value* str_value = create_string_value(a1->value); 
-                insert(&kv_store, a1->key, str_value);
+        switch (args->command) {
+            case STR_SET: {
+                struct Value *v = create_string_value(args->value);
+                insert(kv_store, args->key, v);
+                send_str(sock, "+OK\n");
                 break;
-            case STR_GET:
-                get_value(kv_store, a1->key);
+            }
+            case GET: {
+                struct Value *v = get_value(*kv_store, args->key);
+                if (v) {
+                    char resp[BUF_SIZE];
+                    snprintf(resp, sizeof(resp), "+%s\n", (char *)v->data);
+                    send_str(sock, resp);
+                } else {
+                    send_str(sock, "-nil\n");
+                }
                 break;
-            case STR_DEL:
-                delete_node(kv_store, a1->key);
+            }
+            case DEL:
+                delete_node(*kv_store, args->key);
+                send_str(sock, "+OK\n");
                 break;
             case KEY_EXISTS:
-                node_exists(kv_store, a1->key);
+                send_str(sock, node_exists(*kv_store, args->key) ? "+1\n" : "+0\n");
                 break;
             case CMD_UNKNOWN:
-                printf("Unknown command.");
-                break;
             default:
-                printf("Unusual program behavior"); // this case should never occur.
-                break; 
+                send_str(sock, "-ERR unknown command\n");
+                break;
         }
-        free_arg_struct(a1);
+        free_arg_struct(args);
     }
+}
+
+int main(void) {
+    struct sigaction sa = {0};
+    sa.sa_handler = int_handler;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+
+    int fd, opt = 1;
+    if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { perror("socket"); return 1; }
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+
+    struct sockaddr_in addr = {
+        .sin_family      = AF_INET,
+        .sin_addr.s_addr = htonl(INADDR_ANY),
+        .sin_port        = htons(PORT),
+    };
+    if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) { perror("bind"); return 1; }
+    if (listen(fd, 128) < 0) { perror("listen"); return 1; }
+
+    printf("Listening on port %d...\n", PORT);
+
+    struct hash_table *kv_store = create_table(default_size);
+    socklen_t addr_len = sizeof(addr);
+
+    while (!exit_flag) {
+        int client = accept(fd, (struct sockaddr *)&addr, &addr_len);
+        if (client < 0) {
+            if (!exit_flag) perror("accept");
+            break;
+        }
+        handle_connection(client, &kv_store);
+        close(client);
+    }
+
     free_hash_table(kv_store);
-    // need sighandler
-    char* hello = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"; 
-
-    // with read will have to loop till end received
-    send(new_socket, hello, strlen(hello), MSG_CONFIRM); // which flag? 
-
-    close(new_socket);
     close(fd);
     return 0;
-
 }
